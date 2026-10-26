@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobsheet - CodeIgniter 3 CRUD Users</title>
+    <style>
+        /* ============================================================ */
+        /* STYLES FOR JOBSHEET                                           */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        /* ========== HEADER ========== */
+        .jobsheet-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .jobsheet-header h1 {
+            color: #1a73e8;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .jobsheet-header .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .jobsheet-header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .jobsheet-header .meta span {
+            background: #f0f2f5;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* ========== TOC ========== */
+        .toc {
+            background: #f8f9fc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .toc h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc ul li {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .toc ul li a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h2 .step-badge {
+            background: #1a73e8;
+            color: white;
+            font-size: 14px;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.danger {
+            background: #fde8e8;
+            border-left-color: #e17055;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box ul {
+            margin: 8px 0 0 20px;
+        }
+
+        /* ========== CODE BLOCK (Background Putih) ========== */
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-block .keyword { color: #0000ff; }
+        .code-block .string { color: #a31515; }
+        .code-block .comment { color: #008000; }
+        .code-block .function { color: #795e26; }
+        .code-block .variable { color: #001080; }
+        .code-block .operator { color: #333; }
+        .code-block .bracket { color: #333; }
+        .code-block .tag { color: #800000; }
+        .code-block .attribute { color: #ff0000; }
+        .code-block .value { color: #0000ff; }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fc;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== FILE STRUCTURE ========== */
+        .file-structure {
+            background: #f8f9fc;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .file-structure .folder { color: #795e26; font-weight: bold; }
+        .file-structure .file { color: #001080; }
+        .file-structure .highlight { color: #008000; }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.blue { background: #e3f0ff; color: #1a73e8; }
+        .badge.green { background: #e3f7f1; color: #00b894; }
+        .badge.orange { background: #fff3e0; color: #ff9800; }
+        .badge.red { background: #fde8e8; color: #e17055; }
+        .badge.purple { background: #f0e6ff; color: #764ba2; }
+
+        /* ========== FEATURE GRID ========== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-grid .item {
+            background: #f8f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-grid .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-grid .item .label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ========== CONCLUSION ========== */
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .conclusion-grid .card {
+            background: #f8f9fc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .conclusion-grid .card.before {
+            border-left-color: #e17055;
+        }
+
+        .conclusion-grid .card.after {
+            border-left-color: #00b894;
+        }
+
+        .conclusion-grid .card h4 {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .conclusion-grid .card ul {
+            margin-left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* ========== FLOW ========== */
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .flow-chart .step {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .flow-chart .arrow {
+            font-size: 20px;
+            color: #888;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ========== DOWNLOAD BUTTON ========== */
+        .btn-download {
+            display: inline-block;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 15px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            .btn-download {
+                display: none;
+            }
+            .code-block {
+                background: #ffffff !important;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .code-block .keyword { color: #0000ff; }
+            .code-block .string { color: #a31515; }
+            .code-block .comment { color: #008000; }
+            .code-block .function { color: #795e26; }
+            .code-block .variable { color: #001080; }
+            .code-block .tag { color: #800000; }
+            .code-block .attribute { color: #ff0000; }
+            .code-block .value { color: #0000ff; }
+            .file-structure {
+                background: #f8f9fc;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .file-structure .folder { color: #795e26; }
+            .file-structure .file { color: #001080; }
+            .file-structure .highlight { color: #008000; }
+            .toc ul {
+                columns: 1;
+            }
+            .conclusion-grid {
+                grid-template-columns: 1fr;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-chart {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .jobsheet-header h1 {
+                font-size: 24px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .conclusion-grid {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            .jobsheet-header .meta {
+                gap: 10px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-chart {
+                flex-direction: column;
+            }
+            .flow-chart .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="jobsheet">
+
+        <!-- ============================================================ -->
+        <!-- HEADER                                                        -->
+        <!-- ============================================================ -->
+        <div class="jobsheet-header">
+            <h1>📄 Jobsheet CodeIgniter 3</h1>
+            <p class="subtitle">Implementasi CRUD Users dengan Model M_user, Sidebar, dan Dashboard</p>
+            <div class="meta">
+                <span>📅 Tanggal: <span id="date"></span></span>
+                <span>⏱ Durasi: 4 Jam</span>
+                <span>📚 Level: Pemula - Menengah</span>
+                <span>👨‍💻 Framework: CodeIgniter 3</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DAFTAR ISI                                                   -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h3>📑 Daftar Isi</h3>
+            <ul>
+                <li><a href="#bab1">1. Pendahuluan</a></li>
+                <li><a href="#bab2">2. Struktur Folder</a></li>
+                <li><a href="#bab3">3. Database</a></li>
+                <li><a href="#bab4">4. Controller Auth</a></li>
+                <li><a href="#bab5">5. Controller Dashboard</a></li>
+                <li><a href="#bab6">6. Model M_user</a></li>
+                <li><a href="#bab7">7. View Login</a></li>
+                <li><a href="#bab8">8. Sidebar</a></li>
+                <li><a href="#bab9">9. Dashboard Admin</a></li>
+                <li><a href="#bab10">10. Tambah User</a></li>
+                <li><a href="#bab11">11. Edit User</a></li>
+                <li><a href="#bab12">12. Hapus User</a></li>
+                <li><a href="#bab13">13. Kesimpulan</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 1: PENDAHULUAN                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab1">
+            <h2><span class="step-badge">1</span> Pendahuluan</h2>
+            
+            <p>
+                Dalam arsitektur <strong>MVC (Model-View-Controller)</strong>, <strong>Model</strong> berfungsi untuk 
+                mengelola logika bisnis dan interaksi dengan database. Dengan menggunakan Model, kode menjadi lebih 
+                terstruktur, mudah dipelihara, dan tidak mengotori controller dengan query SQL.
+            </p>
+            
+            <div class="info-box">
+                <strong>🎯 Tujuan Pembelajaran:</strong>
+                <ul>
+                    <li>Memahami konsep MVC dalam CodeIgniter 3</li>
+                    <li>Mampu membuat sistem authentication (login/logout)</li>
+                    <li>Mampu membuat Model M_user untuk mengelola data users</li>
+                    <li>Mampu membuat Dashboard dengan Sidebar yang terintegrasi</li>
+                    <li>Mampu membuat CRUD (Create, Read, Update, Delete) Users</li>
+                    <li>Mampu memisahkan layout (sidebar) dari konten utama</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Prasyarat:</strong>
+                <ul>
+                    <li>CodeIgniter 3 sudah terinstall</li>
+                    <li>Database MySQL sudah siap</li>
+                    <li>Web server (XAMPP/Laragon) berjalan</li>
+                    <li>Dasar PHP dan SQL</li>
+                </ul>
+            </div>
+
+            <div class="feature-grid">
+                <div class="item">
+                    <span class="icon">🔐</span>
+                    <span class="label">Authentication</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📊</span>
+                    <span class="label">Dashboard</span>
+                </div>
+                <div class="item">
+                    <span class="icon">➕</span>
+                    <span class="label">Create</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📋</span>
+                    <span class="label">Read</span>
+                </div>
+                <div class="item">
+                    <span class="icon">✏️</span>
+                    <span class="label">Update</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🗑️</span>
+                    <span class="label">Delete</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 2: STRUKTUR FOLDER                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab2">
+            <h2><span class="step-badge">2</span> Struktur Folder</h2>
+            
+            <p>Berikut adalah struktur folder yang akan kita buat:</p>
+
+            <div class="file-structure">
+<pre>
+application/
+├── controllers/
+│   ├── <span class="file">Auth.php</span>          <span class="highlight">← Controller Login</span>
+│   └── <span class="file">Dashboard.php</span>     <span class="highlight">← Controller Dashboard & CRUD</span>
+├── models/
+│   └── <span class="file">M_user.php</span>        <span class="highlight">← Model untuk users</span>
+├── views/
+│   ├── <span class="file">login.php</span>         <span class="highlight">← Halaman Login</span>
+│   ├── layout/
+│   │   └── <span class="file">sidebar.php</span>     <span class="highlight">← Sidebar (dipanggil di admin)</span>
+│   └── dashboard/
+│       ├── <span class="file">admin.php</span>       <span class="highlight">← Halaman Dashboard</span>
+│       ├── <span class="file">add_user.php</span>    <span class="highlight">← Form Tambah User</span>
+│       ├── <span class="file">edit_user.php</span>   <span class="highlight">← Form Edit User</span>
+│       └── <span class="file">confirm_delete.php</span> <span class="highlight">← Konfirmasi Hapus</span>
+└── config/
+    ├── <span class="file">config.php</span>        <span class="highlight">← Base URL & CSRF</span>
+    ├── <span class="file">autoload.php</span>     <span class="highlight">← Autoload library/helper</span>
+    └── <span class="file">database.php</span>      <span class="highlight">← Konfigurasi database</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 3: DATABASE                                              -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab3">
+            <h2><span class="step-badge">3</span> Database</h2>
+            
+            <p>Buat database dengan nama <code>ci_app</code> dan tabel <code>users</code>:</p>
+
+            <div class="code-block">
+                <span class="lang-label">SQL</span>
+<pre><span class="keyword">CREATE DATABASE</span> ci_app;
+<span class="keyword">USE</span> ci_app;
+
+<span class="keyword">CREATE TABLE</span> users (
+    id <span class="keyword">INT</span>(11) <span class="keyword">PRIMARY KEY AUTO_INCREMENT</span>,
+    username <span class="keyword">VARCHAR</span>(50) <span class="keyword">UNIQUE NOT NULL</span>,
+    password <span class="keyword">VARCHAR</span>(32) <span class="keyword">NOT NULL</span>,
+    role <span class="keyword">ENUM</span>(<span class="string">'admin'</span>, <span class="string">'dosen'</span>, <span class="string">'mahasiswa'</span>) <span class="keyword">DEFAULT</span> <span class="string">'mahasiswa'</span>,
+    created_at <span class="keyword">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>
+);
+
+<span class="comment">-- Contoh data untuk testing</span>
+<span class="keyword">INSERT INTO</span> users (username, password, role) <span class="keyword">VALUES</span> 
+(<span class="string">'admin'</span>, <span class="function">MD5</span>(<span class="string">'admin123'</span>), <span class="string">'admin'</span>),
+(<span class="string">'dosen'</span>, <span class="function">MD5</span>(<span class="string">'dosen123'</span>), <span class="string">'dosen'</span>),
+(<span class="string">'mahasiswa'</span>, <span class="function">MD5</span>(<span class="string">'mahasiswa123'</span>), <span class="string">'mahasiswa'</span>);
+</pre>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Catatan:</strong>
+                <ul>
+                    <li>Password menggunakan MD5 (32 karakter)</li>
+                    <li>Role: <code>admin</code>, <code>dosen</code>, atau <code>mahasiswa</code></li>
+                    <li>Username harus UNIQUE</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 4: CONTROLLER AUTH                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab4">
+            <h2><span class="step-badge">4</span> Controller Auth</h2>
+            
+            <p>File: <code>application/controllers/Auth.php</code></p>
+            
+            <p>Controller ini menangani proses <strong>login</strong> dan <strong>logout</strong>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">Auth</span> <span class="keyword">extends</span> <span class="function">CI_Controller</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">model</span>(<span class="string">'M_user'</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">index</span>() { 
+        <span class="keyword">if</span>(<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'logged_in'</span>)) {
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'login'</span>); 
+    }
+
+    <span class="keyword">public function</span> <span class="function">login_action</span>() {
+        <span class="variable">$username</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'username'</span>);
+        <span class="variable">$password</span> = <span class="function">md5</span>(<span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'password'</span>));
+        
+        <span class="variable">$user</span> = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_user_by_username</span>(<span class="variable">$username</span>);
+
+        <span class="keyword">if</span> (<span class="variable">$user</span> && <span class="variable">$user</span>-><span class="variable">password</span> == <span class="variable">$password</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_userdata</span>([
+                <span class="string">'user_id'</span> => <span class="variable">$user</span>-><span class="variable">id</span>,
+                <span class="string">'username'</span> => <span class="variable">$user</span>-><span class="variable">username</span>,
+                <span class="string">'role'</span> => <span class="variable">$user</span>-><span class="variable">role</span>, 
+                <span class="string">'logged_in'</span> => <span class="keyword">TRUE</span>
+            ]);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Username atau Password salah!'</span>);
+            <span class="function">redirect</span>(<span class="string">'Auth'</span>);
+        }
+    }
+
+    <span class="keyword">public function</span> <span class="function">logout</span>() {
+        <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">sess_destroy</span>();
+        <span class="function">redirect</span>(<span class="string">'auth'</span>);
+    }
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 5: CONTROLLER DASHBOARD                                  -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab5">
+            <h2><span class="step-badge">5</span> Controller Dashboard</h2>
+            
+            <p>File: <code>application/controllers/Dashboard.php</code></p>
+            
+            <p>Controller ini menangani semua operasi CRUD Users.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">Dashboard</span> <span class="keyword">extends</span> <span class="function">CI_Controller</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">model</span>(<span class="string">'M_user'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'form'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">library</span>(<span class="string">'form_validation'</span>);
+        
+        <span class="keyword">if</span>(!<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'logged_in'</span>)) {
+            <span class="function">redirect</span>(<span class="string">'auth'</span>);
+        }
+    }
+    
+    <span class="comment">// ===== READ =====</span>
+    <span class="keyword">public function</span> <span class="function">index</span>() {
+        <span class="variable">$keyword</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">get</span>(<span class="string">'search'</span>);
+        
+        <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)) {
+            <span class="variable">$data</span>[<span class="string">'users'</span>] = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">search_users</span>(<span class="variable">$keyword</span>);
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="variable">$keyword</span>;
+        } <span class="keyword">else</span> {
+            <span class="variable">$data</span>[<span class="string">'users'</span>] = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_all_users</span>();
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="string">''</span>;
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/admin'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// ===== CREATE =====</span>
+    <span class="keyword">public function</span> <span class="function">add</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Tambah User'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/add_user'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">save</span>() {
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'username'</span>, <span class="string">'Username'</span>, <span class="string">'required|min_length[3]|max_length[50]|is_unique[users.username]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'password'</span>, <span class="string">'Password'</span>, <span class="string">'required|min_length[4]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'confirm_password'</span>, <span class="string">'Konfirmasi Password'</span>, <span class="string">'required|matches[password]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'role'</span>, <span class="string">'Role'</span>, <span class="string">'required|in_list[admin,dosen,mahasiswa]'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'dashboard/add'</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$data</span> = [
+                <span class="string">'username'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'username'</span>),
+                <span class="string">'password'</span> => <span class="function">md5</span>(<span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'password'</span>)),
+                <span class="string">'role'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'role'</span>)
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">insert_user</span>(<span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'User berhasil ditambahkan!'</span>);
+                <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== UPDATE =====</span>
+    <span class="keyword">public function</span> <span class="function">edit</span>(<span class="variable">$id</span>) {
+        <span class="variable">$data</span>[<span class="string">'user'</span>] = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_user_by_id</span>(<span class="variable">$id</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'user'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'User tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/edit_user'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="variable">$id</span>) {
+        <span class="variable">$user</span> = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_user_by_id</span>(<span class="variable">$id</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$user</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'User tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'username'</span>, <span class="string">'Username'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'role'</span>, <span class="string">'Role'</span>, <span class="string">'required|in_list[admin,dosen,mahasiswa]'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'password'</span>) != <span class="string">''</span>) {
+            <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'password'</span>, <span class="string">'Password'</span>, <span class="string">'min_length[4]'</span>);
+            <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'confirm_password'</span>, <span class="string">'Konfirmasi Password'</span>, <span class="string">'matches[password]'</span>);
+        }
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'dashboard/edit/'</span> . <span class="variable">$id</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$data</span> = [
+                <span class="string">'username'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'username'</span>),
+                <span class="string">'role'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'role'</span>)
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'password'</span>) != <span class="string">''</span>) {
+                <span class="variable">$data</span>[<span class="string">'password'</span>] = <span class="function">md5</span>(<span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'password'</span>));
+            }
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">update_user</span>(<span class="variable">$id</span>, <span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'User berhasil diupdate!'</span>);
+                <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== DELETE =====</span>
+    <span class="keyword">public function</span> <span class="function">confirm_delete</span>(<span class="variable">$id</span>) {
+        <span class="variable">$data</span>[<span class="string">'user'</span>] = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_user_by_id</span>(<span class="variable">$id</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'user'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'User tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="keyword">if</span> (<span class="variable">$id</span> == <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'user_id'</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Tidak bisa menghapus akun sendiri!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/confirm_delete'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">delete</span>(<span class="variable">$id</span>) {
+        <span class="variable">$user</span> = <span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">get_user_by_id</span>(<span class="variable">$id</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$user</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'User tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="keyword">if</span> (<span class="variable">$id</span> == <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'user_id'</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Tidak bisa menghapus akun sendiri!'</span>);
+            <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+        }
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_user</span>-><span class="function">delete_user</span>(<span class="variable">$id</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'User berhasil dihapus!'</span>);
+        }
+        <span class="function">redirect</span>(<span class="string">'dashboard'</span>);
+    }
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 6: MODEL M_USER                                          -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab6">
+            <h2><span class="step-badge">6</span> Model M_user</h2>
+            
+            <p>File: <code>application/models/M_user.php</code></p>
+            
+            <p>Model ini menangani semua operasi database untuk tabel <code>users</code>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">M_user</span> <span class="keyword">extends</span> <span class="function">CI_Model</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">database</span>();
+    }
+    
+    <span class="comment">// READ - Get all users</span>
+    <span class="keyword">public function</span> <span class="function">get_all_users</span>() {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'users'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">// READ - Search users</span>
+    <span class="keyword">public function</span> <span class="function">search_users</span>(<span class="variable">$keyword</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">like</span>(<span class="string">'username'</span>, <span class="variable">$keyword</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'users'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">// READ - Get user by ID</span>
+    <span class="keyword">public function</span> <span class="function">get_user_by_id</span>(<span class="variable">$id</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get_where</span>(<span class="string">'users'</span>, [<span class="string">'id'</span> => <span class="variable">$id</span>])-><span class="function">row</span>();
+    }
+    
+    <span class="comment">// READ - Get user by username</span>
+    <span class="keyword">public function</span> <span class="function">get_user_by_username</span>(<span class="variable">$username</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get_where</span>(<span class="string">'users'</span>, [<span class="string">'username'</span> => <span class="variable">$username</span>])-><span class="function">row</span>();
+    }
+    
+    <span class="comment">// CREATE - Insert new user</span>
+    <span class="keyword">public function</span> <span class="function">insert_user</span>(<span class="variable">$data</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">insert</span>(<span class="string">'users'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// UPDATE - Update user</span>
+    <span class="keyword">public function</span> <span class="function">update_user</span>(<span class="variable">$id</span>, <span class="variable">$data</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'id'</span>, <span class="variable">$id</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">update</span>(<span class="string">'users'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// DELETE - Delete user</span>
+    <span class="keyword">public function</span> <span class="function">delete_user</span>(<span class="variable">$id</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'id'</span>, <span class="variable">$id</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">delete</span>(<span class="string">'users'</span>);
+    }
+    
+    <span class="comment">// Count users by role</span>
+    <span class="keyword">public function</span> <span class="function">count_users_by_role</span>(<span class="variable">$role</span> = <span class="keyword">null</span>) {
+        <span class="keyword">if</span> (<span class="variable">$role</span>) {
+            <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'role'</span>, <span class="variable">$role</span>);
+        }
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">count_all_results</span>(<span class="string">'users'</span>);
+    }
+}
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 7: VIEW LOGIN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab7">
+            <h2><span class="step-badge">7</span> View Login</h2>
+            
+            <p>File: <code>application/views/login.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">HTML</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Login<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body</span> <span class="attribute">style</span>=<span class="value">"background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh;"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card shadow-lg"</span> <span class="attribute">style</span>=<span class="value">"width: 400px; padding: 30px; border-radius: 12px;"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;h3</span> <span class="attribute">class</span>=<span class="value">"text-center mb-4"</span><span class="tag">&gt;</span>🔐 Login<span class="tag">&lt;/h3&gt;</span>
+
+        <span class="comment">&lt;!-- Flashdata error --&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">if</span>(<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>)): <span class="tag">?&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert alert-danger"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>) <span class="tag">?&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+        <span class="tag">&lt;form</span> <span class="attribute">method</span>=<span class="value">"post"</span> <span class="attribute">action</span>=<span class="value">"&lt;?= base_url('auth/login_action') ?&gt;"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"mb-3"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;label</span> <span class="attribute">class</span>=<span class="value">"form-label"</span><span class="tag">&gt;</span>Username<span class="tag">&lt;/label&gt;</span>
+                <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"mb-3"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;label</span> <span class="attribute">class</span>=<span class="value">"form-label"</span><span class="tag">&gt;</span>Password<span class="tag">&lt;/label&gt;</span>
+                <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn btn-primary w-100"</span><span class="tag">&gt;</span>Login<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/form&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 8: SIDEBAR                                               -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab8">
+            <h2><span class="step-badge">8</span> Sidebar</h2>
+            
+            <p>File: <code>application/views/layout/sidebar.php</code></p>
+            
+            <p>Sidebar berisi navigasi utama dengan dark theme.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- SIDEBAR STYLES --&gt;</span>
+<span class="tag">&lt;style&gt;</span>
+    <span class="selector">.sidebar-wrapper</span> {
+        <span class="attribute">min-height</span>: <span class="value">100vh</span>;
+        <span class="attribute">background</span>: <span class="value">#1a2035</span>;
+        <span class="attribute">padding</span>: <span class="value">0</span>;
+        <span class="attribute">position</span>: <span class="value">fixed</span>;
+        <span class="attribute">top</span>: <span class="value">0</span>;
+        <span class="attribute">left</span>: <span class="value">0</span>;
+        <span class="attribute">width</span>: <span class="value">250px</span>;
+        <span class="attribute">height</span>: <span class="value">100vh</span>;
+        <span class="attribute">overflow-y</span>: <span class="value">auto</span>;
+        <span class="attribute">z-index</span>: <span class="value">999</span>;
+        <span class="attribute">border-right</span>: <span class="value">1px solid rgba(255,255,255,0.05)</span>;
+    }
+    <span class="selector">.sidebar-header</span> {
+        <span class="attribute">padding</span>: <span class="value">25px 20px 20px 24px</span>;
+        <span class="attribute">border-bottom</span>: <span class="value">1px solid rgba(255,255,255,0.06)</span>;
+    }
+    <span class="selector">.sidebar-header .brand</span> {
+        <span class="attribute">display</span>: <span class="value">flex</span>;
+        <span class="attribute">align-items</span>: <span class="value">center</span>;
+        <span class="attribute">gap</span>: <span class="value">12px</span>;
+    }
+    <span class="selector">.sidebar-header .brand .logo-icon</span> {
+        <span class="attribute">font-size</span>: <span class="value">28px</span>;
+        <span class="attribute">color</span>: <span class="value">#4e73df</span>;
+    }
+    <span class="selector">.sidebar-header .brand .brand-text .app-name</span> {
+        <span class="attribute">color</span>: <span class="value">#ffffff</span>;
+        <span class="attribute">font-size</span>: <span class="value">20px</span>;
+        <span class="attribute">font-weight</span>: <span class="value">700</span>;
+        <span class="attribute">margin</span>: <span class="value">0</span>;
+    }
+    <span class="selector">.sidebar-header .brand .brand-text .app-name span</span> {
+        <span class="attribute">color</span>: <span class="value">#4e73df</span>;
+    }
+    <span class="selector">.sidebar-header .brand .brand-text .app-sub</span> {
+        <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.4)</span>;
+        <span class="attribute">font-size</span>: <span class="value">10px</span>;
+        <span class="attribute">letter-spacing</span>: <span class="value">2px</span>;
+        <span class="attribute">text-transform</span>: <span class="value">uppercase</span>;
+        <span class="attribute">margin</span>: <span class="value">0</span>;
+    }
+    <span class="selector">.user-profile</span> {
+        <span class="attribute">padding</span>: <span class="value">20px 24px</span>;
+        <span class="attribute">border-bottom</span>: <span class="value">1px solid rgba(255,255,255,0.06)</span>;
+        <span class="attribute">display</span>: <span class="value">flex</span>;
+        <span class="attribute">align-items</span>: <span class="value">center</span>;
+        <span class="attribute">gap</span>: <span class="value">14px</span>;
+    }
+    <span class="selector">.user-profile .avatar</span> {
+        <span class="attribute">width</span>: <span class="value">44px</span>;
+        <span class="attribute">height</span>: <span class="value">44px</span>;
+        <span class="attribute">border-radius</span>: <span class="value">50%</span>;
+        <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>;
+        <span class="attribute">display</span>: <span class="value">flex</span>;
+        <span class="attribute">align-items</span>: <span class="value">center</span>;
+        <span class="attribute">justify-content</span>: <span class="value">center</span>;
+        <span class="attribute">font-size</span>: <span class="value">18px</span>;
+        <span class="attribute">font-weight</span>: <span class="value">700</span>;
+        <span class="attribute">color</span>: <span class="value">white</span>;
+    }
+    <span class="selector">.user-profile .user-info .name</span> {
+        <span class="attribute">color</span>: <span class="value">#ffffff</span>;
+        <span class="attribute">font-size</span>: <span class="value">15px</span>;
+        <span class="attribute">font-weight</span>: <span class="value">600</span>;
+        <span class="attribute">margin</span>: <span class="value">0</span>;
+    }
+    <span class="selector">.user-profile .user-info .role</span> {
+        <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.5)</span>;
+        <span class="attribute">font-size</span>: <span class="value">12px</span>;
+        <span class="attribute">margin</span>: <span class="value">0</span>;
+    }
+    <span class="selector">.sidebar-nav .nav-label</span> {
+        <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.25)</span>;
+        <span class="attribute">font-size</span>: <span class="value">11px</span>;
+        <span class="attribute">text-transform</span>: <span class="value">uppercase</span>;
+        <span class="attribute">letter-spacing</span>: <span class="value">1.5px</span>;
+        <span class="attribute">padding</span>: <span class="value">16px 14px 8px 14px</span>;
+        <span class="attribute">font-weight</span>: <span class="value">700</span>;
+    }
+    <span class="selector">.sidebar-nav .nav li a</span> {
+        <span class="attribute">display</span>: <span class="value">flex</span>;
+        <span class="attribute">align-items</span>: <span class="value">center</span>;
+        <span class="attribute">gap</span>: <span class="value">14px</span>;
+        <span class="attribute">padding</span>: <span class="value">11px 16px</span>;
+        <span class="attribute">border-radius</span>: <span class="value">8px</span>;
+        <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.6)</span>;
+        <span class="attribute">text-decoration</span>: <span class="value">none</span>;
+        <span class="attribute">font-size</span>: <span class="value">14px</span>;
+        <span class="attribute">font-weight</span>: <span class="value">500</span>;
+        <span class="attribute">transition</span>: <span class="value">all 0.25s ease</span>;
+    }
+    <span class="selector">.sidebar-nav .nav li a:hover</span> {
+        <span class="attribute">background</span>: <span class="value">rgba(255,255,255,0.06)</span>;
+        <span class="attribute">color</span>: <span class="value">#ffffff</span>;
+    }
+    <span class="selector">.sidebar-nav .nav li a.active</span> {
+        <span class="attribute">background</span>: <span class="value">rgba(78,115,223,0.15)</span>;
+        <span class="attribute">color</span>: <span class="value">#4e73df</span>;
+    }
+    <span class="selector">.sidebar-nav .nav li a.logout-link</span> {
+        <span class="attribute">margin-top</span>: <span class="value">8px</span>;
+        <span class="attribute">border-top</span>: <span class="value">1px solid rgba(255,255,255,0.06)</span>;
+        <span class="attribute">padding-top</span>: <span class="value">16px</span>;
+        <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.4)</span>;
+    }
+    <span class="selector">.sidebar-nav .nav li a.logout-link:hover</span> {
+        <span class="attribute">color</span>: <span class="value">#e74a3b</span>;
+        <span class="attribute">background</span>: <span class="value">rgba(231,74,59,0.1)</span>;
+    }
+    <span class="selector">@media (max-width: 768px)</span> {
+        <span class="selector">.sidebar-wrapper</span> {
+            <span class="attribute">left</span>: <span class="value">-280px</span>;
+            <span class="attribute">width</span>: <span class="value">280px</span>;
+        }
+        <span class="selector">.sidebar-wrapper.open</span> {
+            <span class="attribute">left</span>: <span class="value">0</span>;
+        }
+    }
+<span class="tag">&lt;/style&gt;</span>
+
+<span class="comment">&lt;!-- Sidebar Toggle --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attribute">class</span>=<span class="value">"sidebar-toggle"</span> <span class="attribute">id</span>=<span class="value">"sidebarToggle"</span><span class="tag">&gt;</span>☰<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"sidebar-overlay"</span> <span class="attribute">id</span>=<span class="value">"sidebarOverlay"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Sidebar Wrapper --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"sidebar-wrapper"</span> <span class="attribute">id</span>=<span class="value">"sidebarWrapper"</span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- Header --&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"sidebar-header"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"brand"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"logo-icon"</span><span class="tag">&gt;</span>📊<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"brand-text"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;h4</span> <span class="attribute">class</span>=<span class="value">"app-name"</span><span class="tag">&gt;</span>My<span class="tag">&lt;span&gt;</span>App<span class="tag">&lt;/span&gt;&lt;/h4&gt;</span>
+                <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"app-sub"</span><span class="tag">&gt;</span>ADMINISTRATION PANEL<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="comment">&lt;!-- User Profile --&gt;</span>
+    <span class="tag">&lt;?php</span> 
+        <span class="variable">$username</span> = <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'username'</span>) ?: <span class="string">'Guest'</span>;
+        <span class="variable">$role</span> = <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'role'</span>) ?: <span class="string">'user'</span>;
+        <span class="variable">$inisial</span> = <span class="function">strtoupper</span>(<span class="function">substr</span>(<span class="variable">$username</span>, <span class="number">0</span>, <span class="number">1</span>));
+        <span class="variable">$roleLabel</span> = <span class="variable">$role</span> == <span class="string">'admin'</span> ? <span class="string">'Administrator'</span> : <span class="string">'User'</span>;
+    <span class="tag">?&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-profile"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"avatar"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$inisial</span> <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-info"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"name"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$username</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"role"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$roleLabel</span> <span class="tag">?&gt;</span><span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="comment">&lt;!-- Navigation --&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"sidebar-nav"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"nav-label"</span><span class="tag">&gt;</span>MAIN MENU<span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;ul</span> <span class="attribute">class</span>=<span class="value">"nav"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span><span class="tag">&gt;</span>📊 Dashboard<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span><span class="tag">&gt;</span>👤 Profile<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"nav-label"</span> <span class="attribute">style</span>=<span class="value">"margin-top: 8px;"</span><span class="tag">&gt;</span>MANAGEMENT<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span><span class="tag">&gt;</span>👥 Users<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('auth/logout') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"logout-link"</span><span class="tag">&gt;</span>🚪 Logout<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+    <span class="keyword">const</span> sidebarToggle = document.<span class="function">getElementById</span>(<span class="string">'sidebarToggle'</span>);
+    <span class="keyword">const</span> sidebarWrapper = document.<span class="function">getElementById</span>(<span class="string">'sidebarWrapper'</span>);
+    <span class="keyword">const</span> sidebarOverlay = document.<span class="function">getElementById</span>(<span class="string">'sidebarOverlay'</span>);
+
+    sidebarToggle.<span class="function">addEventListener</span>(<span class="string">'click'</span>, <span class="keyword">function</span>() {
+        sidebarWrapper.<span class="function">classList</span>.<span class="function">toggle</span>(<span class="string">'open'</span>);
+        sidebarOverlay.<span class="function">classList</span>.<span class="function">toggle</span>(<span class="string">'open'</span>);
+    });
+
+    sidebarOverlay.<span class="function">addEventListener</span>(<span class="string">'click'</span>, <span class="keyword">function</span>() {
+        sidebarWrapper.<span class="function">classList</span>.<span class="function">remove</span>(<span class="string">'open'</span>);
+        sidebarOverlay.<span class="function">classList</span>.<span class="function">remove</span>(<span class="string">'open'</span>);
+    });
+<span class="tag">&lt;/script&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 9: DASHBOARD ADMIN                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab9">
+            <h2><span class="step-badge">9</span> Dashboard Admin</h2>
+            
+            <p>File: <code>application/views/dashboard/admin.php</code></p>
+            
+            <p>Halaman dashboard menampilkan statistik dan daftar pengguna.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Dashboard Admin<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">250px</span>; <span class="attribute">padding</span>: <span class="value">30px 35px</span>; <span class="attribute">min-height</span>: <span class="value">100vh</span>; <span class="attribute">background</span>: <span class="value">#f0f2f5</span>; }
+        <span class="selector">.page-header</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">15px</span>; }
+        <span class="selector">.page-header h3</span> { <span class="attribute">font-size</span>: <span class="value">26px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">margin</span>: <span class="value">0</span>; }
+        <span class="selector">.page-header h3 .badge-role</span> { <span class="attribute">font-size</span>: <span class="value">13px</span>; <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">4px 16px</span>; <span class="attribute">border-radius</span>: <span class="value">20px</span>; }
+        <span class="selector">.btn-add</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #00b894 0%, #00a381 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 24px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.btn-add:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 6px 20px rgba(0,184,148,0.4)</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.stats-grid</span> { <span class="attribute">display</span>: <span class="value">grid</span>; <span class="attribute">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(200px, 1fr))</span>; <span class="attribute">gap</span>: <span class="value">20px</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; }
+        <span class="selector">.stat-card</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">20px 24px</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #4e73df</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; }
+        <span class="selector">.stat-card:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-4px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 8px 25px rgba(0,0,0,0.1)</span>; }
+        <span class="selector">.stat-card .stat-label</span> { <span class="attribute">font-size</span>: <span class="value">13px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; <span class="attribute">text-transform</span>: <span class="value">uppercase</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.stat-card .stat-value</span> { <span class="attribute">font-size</span>: <span class="value">28px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">margin-top</span>: <span class="value">4px</span>; }
+        <span class="selector">.table-container</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">overflow</span>: <span class="value">hidden</span>; }
+        <span class="selector">.table-header</span> { <span class="attribute">padding</span>: <span class="value">18px 24px</span>; <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">border-bottom</span>: <span class="value">1px solid #eef2f7</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        <span class="selector">.search-form</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; }
+        <span class="selector">.search-form input</span> { <span class="attribute">padding</span>: <span class="value">8px 16px</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">outline</span>: <span class="value">none</span>; <span class="attribute">width</span>: <span class="value">220px</span>; }
+        <span class="selector">.search-form input:focus</span> { <span class="attribute">border-color</span>: <span class="value">#4e73df</span>; <span class="attribute">box-shadow</span>: <span class="value">0 0 0 3px rgba(78,115,223,0.15)</span>; }
+        <span class="selector">.search-form .btn-search</span> { <span class="attribute">background</span>: <span class="value">#4e73df</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">8px 18px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; }
+        <span class="selector">.search-form .btn-reset</span> { <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">8px 18px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; }
+        <span class="selector">table</span> { <span class="attribute">width</span>: <span class="value">100%</span>; <span class="attribute">border-collapse</span>: <span class="value">collapse</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">table th</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">text-align</span>: <span class="value">left</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">text-transform</span>: <span class="value">uppercase</span>; <span class="attribute">font-size</span>: <span class="value">12px</span>; }
+        <span class="selector">table td</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-bottom</span>: <span class="value">1px solid #f0f2f5</span>; <span class="attribute">vertical-align</span>: <span class="value">middle</span>; }
+        <span class="selector">table tbody tr:hover</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; }
+        <span class="selector">.user-avatar</span> { <span class="attribute">width</span>: <span class="value">36px</span>; <span class="attribute">height</span>: <span class="value">36px</span>; <span class="attribute">border-radius</span>: <span class="value">50%</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">text-transform</span>: <span class="value">uppercase</span>; }
+        <span class="selector">.user-avatar.admin</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #e17055 0%, #d63031 100%)</span>; }
+        <span class="selector">.user-avatar.dosen</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>; }
+        <span class="selector">.user-avatar.mahasiswa</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #00b894 0%, #00a381 100%)</span>; }
+        <span class="selector">.role-badge</span> { <span class="attribute">display</span>: <span class="value">inline-block</span>; <span class="attribute">padding</span>: <span class="value">4px 14px</span>; <span class="attribute">border-radius</span>: <span class="value">20px</span>; <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.role-badge.admin</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; }
+        <span class="selector">.role-badge.dosen</span> { <span class="attribute">background</span>: <span class="value">#e3f0ff</span>; <span class="attribute">color</span>: <span class="value">#1a73e8</span>; }
+        <span class="selector">.role-badge.mahasiswa</span> { <span class="attribute">background</span>: <span class="value">#e3f7f1</span>; <span class="attribute">color</span>: <span class="value">#00b894</span>; }
+        <span class="selector">.btn-edit</span> { <span class="attribute">background</span>: <span class="value">#e3f0ff</span>; <span class="attribute">color</span>: <span class="value">#1a73e8</span>; <span class="attribute">padding</span>: <span class="value">6px 14px</span>; <span class="attribute">border-radius</span>: <span class="value">6px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">4px</span>; }
+        <span class="selector">.btn-edit:hover</span> { <span class="attribute">background</span>: <span class="value">#1a73e8</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.btn-delete</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">padding</span>: <span class="value">6px 14px</span>; <span class="attribute">border-radius</span>: <span class="value">6px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">4px</span>; }
+        <span class="selector">.btn-delete:hover</span> { <span class="attribute">background</span>: <span class="value">#e17055</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.alert-custom</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.alert-custom.alert-danger</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #e17055</span>; }
+        <span class="selector">.alert-custom.alert-success</span> { <span class="attribute">background</span>: <span class="value">#e3f7f1</span>; <span class="attribute">color</span>: <span class="value">#00b894</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #00b894</span>; }
+        <span class="selector">.search-info</span> { <span class="attribute">padding</span>: <span class="value">10px 24px</span>; <span class="attribute">background</span>: <span class="value">#e8f4fd</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">color</span>: <span class="value">#1a73e8</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; }
+        <span class="selector">.table-footer</span> { <span class="attribute">padding</span>: <span class="value">16px 24px</span>; <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">border-top</span>: <span class="value">1px solid #eef2f7</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        <span class="selector">.empty-state</span> { <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">padding</span>: <span class="value">60px 20px</span>; <span class="attribute">color</span>: <span class="value">#aaa</span>; }
+        <span class="selector">.empty-state .icon</span> { <span class="attribute">font-size</span>: <span class="value">48px</span>; <span class="attribute">margin-bottom</span>: <span class="value">16px</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">20px 16px</span>; <span class="attribute">padding-top</span>: <span class="value">70px</span>; } <span class="selector">.stats-grid</span> { <span class="attribute">grid-template-columns</span>: <span class="value">repeat(2, 1fr)</span>; } <span class="selector">.search-form input</span> { <span class="attribute">width</span>: <span class="value">140px</span>; } }
+        <span class="selector">@media (max-width: 480px)</span> { <span class="selector">.stats-grid</span> { <span class="attribute">grid-template-columns</span>: <span class="value">1fr</span>; } <span class="selector">.search-form</span> { <span class="attribute">width</span>: <span class="value">100%</span>; } <span class="selector">.search-form input</span> { <span class="attribute">flex</span>: <span class="value">1</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;?php</span> <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/sidebar'</span>); <span class="tag">?&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-wrapper"</span><span class="tag">&gt;</span>
+        <span class="comment">&lt;!-- Page Header --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"page-header"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h3&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-chart-line"</span> <span class="attribute">style</span>=<span class="value">"color: #4e73df;"</span><span class="tag">&gt;&lt;/i&gt;</span> Dashboard Admin <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"badge-role"</span><span class="tag">&gt;</span>Administrator<span class="tag">&lt;/span&gt;&lt;/h3&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"header-actions"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"total-users"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-users"</span><span class="tag">&gt;&lt;/i&gt;</span> Total: <span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$users</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;</span> User<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard/add') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-add"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-plus"</span><span class="tag">&gt;&lt;/i&gt;</span> Tambah User<span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- Flashdata --&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'success'</span>)): <span class="tag">?&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert-custom alert-success"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-check-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'success'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>)): <span class="tag">?&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert-custom alert-danger"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-exclamation-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+        <span class="comment">&lt;!-- Statistics --&gt;</span>
+        <span class="tag">&lt;?php</span> 
+            <span class="variable">$adminCount</span> = <span class="number">0</span>; <span class="variable">$dosenCount</span> = <span class="number">0</span>; <span class="variable">$mahasiswaCount</span> = <span class="number">0</span>;
+            <span class="keyword">foreach</span>(<span class="variable">$users</span> <span class="keyword">as</span> <span class="variable">$u</span>) {
+                <span class="keyword">if</span>(<span class="variable">$u</span>-><span class="variable">role</span> == <span class="string">'admin'</span>) <span class="variable">$adminCount</span>++;
+                <span class="keyword">elseif</span>(<span class="variable">$u</span>-><span class="variable">role</span> == <span class="string">'dosen'</span>) <span class="variable">$dosenCount</span>++;
+                <span class="keyword">elseif</span>(<span class="variable">$u</span>-><span class="variable">role</span> == <span class="string">'mahasiswa'</span>) <span class="variable">$mahasiswaCount</span>++;
+            }
+        <span class="tag">?&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stats-grid"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"stat-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-users"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-label"</span><span class="tag">&gt;</span>Total Users<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-value"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$users</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"stat-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-tie"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-label"</span><span class="tag">&gt;</span>Admin<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-value"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$adminCount</span> <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"stat-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-chalkboard-teacher"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-label"</span><span class="tag">&gt;</span>Dosen<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-value"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$dosenCount</span> <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"stat-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-graduate"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-label"</span><span class="tag">&gt;</span>Mahasiswa<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"stat-value"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$mahasiswaCount</span> <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- Table --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"table-container"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"table-header"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"table-title"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-list"</span><span class="tag">&gt;&lt;/i&gt;</span> Daftar Pengguna <span class="tag">&lt;span&gt;</span><span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$users</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;&lt;/div&gt;</span>
+                <span class="tag">&lt;form</span> <span class="attribute">class</span>=<span class="value">"search-form"</span> <span class="attribute">method</span>=<span class="value">"get"</span> <span class="attribute">action</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"search"</span> <span class="attribute">placeholder</span>=<span class="value">"Cari user..."</span> <span class="attribute">value</span>=<span class="value">"&lt;?= isset($keyword) ? htmlspecialchars($keyword) : '' ?&gt;"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn-search"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-search"</span><span class="tag">&gt;&lt;/i&gt;</span> Cari<span class="tag">&lt;/button&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="function">isset</span>(<span class="variable">$keyword</span>) && !<span class="function">empty</span>(<span class="variable">$keyword</span>)): <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-reset"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-times"</span><span class="tag">&gt;&lt;/i&gt;</span> Reset<span class="tag">&lt;/a&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+                <span class="tag">&lt;/form&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+
+            <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="function">isset</span>(<span class="variable">$keyword</span>) && !<span class="function">empty</span>(<span class="variable">$keyword</span>)): <span class="tag">?&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"search-info"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;span&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-search"</span><span class="tag">&gt;&lt;/i&gt;</span> Hasil pencarian: <span class="tag">&lt;strong&gt;</span>"<span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$keyword</span>) <span class="tag">?&gt;</span>"<span class="tag">&lt;/strong&gt;&lt;/span&gt;</span>
+                    <span class="tag">&lt;span&gt;</span>Ditemukan <span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$users</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;</span> data<span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+            <span class="tag">&lt;table&gt;</span>
+                <span class="tag">&lt;thead&gt;</span>
+                    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;th&gt;</span>#<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Username<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Role<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Status<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>Aksi<span class="tag">&lt;/th&gt;&lt;/tr&gt;</span>
+                <span class="tag">&lt;/thead&gt;</span>
+                <span class="tag">&lt;tbody&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">if</span>(!<span class="function">empty</span>(<span class="variable">$users</span>)): <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;?php</span> <span class="variable">$no</span> = <span class="number">1</span>; <span class="keyword">foreach</span>(<span class="variable">$users</span> <span class="keyword">as</span> <span class="variable">$u</span>): <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;tr&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$no</span>++ <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span>
+                                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-cell"</span><span class="tag">&gt;</span>
+                                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-avatar &lt;?= $u-&gt;role ?&gt;"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">strtoupper</span>(<span class="function">substr</span>(<span class="variable">$u</span>-><span class="variable">username</span>, <span class="number">0</span>, <span class="number">1</span>)) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+                                    <span class="tag">&lt;span&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$u</span>-><span class="variable">username</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;</span>
+                                <span class="tag">&lt;/div&gt;</span>
+                            <span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span>
+                                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"role-badge &lt;?= $u-&gt;role ?&gt;"</span><span class="tag">&gt;</span>
+                                    <span class="tag">&lt;?php</span> 
+                                        <span class="variable">$roleLabels</span> = [<span class="string">'admin'</span> => <span class="string">'👑 Admin'</span>, <span class="string">'dosen'</span> => <span class="string">'👨‍🏫 Dosen'</span>, <span class="string">'mahasiswa'</span> => <span class="string">'🎓 Mahasiswa'</span>];
+                                        <span class="keyword">echo</span> <span class="variable">$roleLabels</span>[<span class="variable">$u</span>-><span class="variable">role</span>] ?? <span class="variable">$u</span>-><span class="variable">role</span>;
+                                    <span class="tag">?&gt;</span>
+                                <span class="tag">&lt;/span&gt;</span>
+                            <span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"status-indicator"</span><span class="tag">&gt;</span><span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"dot"</span><span class="tag">&gt;&lt;/span&gt;</span> Aktif<span class="tag">&lt;/span&gt;&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span>
+                                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard/edit/'.$u-&gt;id) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-edit"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-edit"</span><span class="tag">&gt;&lt;/i&gt;</span> Edit<span class="tag">&lt;/a&gt;</span>
+                                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard/confirm_delete/'.$u-&gt;id) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-delete"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-trash"</span><span class="tag">&gt;&lt;/i&gt;</span> Hapus<span class="tag">&lt;/a&gt;</span>
+                            <span class="tag">&lt;/td&gt;</span>
+                        <span class="tag">&lt;/tr&gt;</span>
+                        <span class="tag">&lt;?php</span> <span class="keyword">endforeach</span>; <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;td</span> <span class="attribute">colspan</span>=<span class="value">"5"</span><span class="tag">&gt;</span>
+                            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"empty-state"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-inbox"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                                <span class="tag">&lt;h4&gt;</span><span class="tag">&lt;?=</span> (<span class="function">isset</span>(<span class="variable">$keyword</span>) && !<span class="function">empty</span>(<span class="variable">$keyword</span>)) ? <span class="string">'User tidak ditemukan!'</span> : <span class="string">'Belum ada pengguna'</span> <span class="tag">?&gt;</span><span class="tag">&lt;/h4&gt;</span>
+                                <span class="tag">&lt;p&gt;</span><span class="tag">&lt;?=</span> (<span class="function">isset</span>(<span class="variable">$keyword</span>) && !<span class="function">empty</span>(<span class="variable">$keyword</span>)) ? <span class="string">'Coba dengan kata kunci lain'</span> : <span class="string">'Tambahkan user baru dengan klik tombol "Tambah User"'</span> <span class="tag">?&gt;</span><span class="tag">&lt;/p&gt;</span>
+                            <span class="tag">&lt;/div&gt;</span>
+                        <span class="tag">&lt;/td&gt;&lt;/tr&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+                <span class="tag">&lt;/tbody&gt;</span>
+            <span class="tag">&lt;/table&gt;</span>
+
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"table-footer"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"info"</span><span class="tag">&gt;</span>Menampilkan <span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$users</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;</span> data<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"pagination"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-chevron-left"</span><span class="tag">&gt;&lt;/i&gt;&lt;/a&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">class</span>=<span class="value">"active"</span><span class="tag">&gt;</span>1<span class="tag">&lt;/a&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span><span class="tag">&gt;</span>2<span class="tag">&lt;/a&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span><span class="tag">&gt;</span>3<span class="tag">&lt;/a&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-chevron-right"</span><span class="tag">&gt;&lt;/i&gt;&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 10: TAMBAH USER                                          -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab10">
+            <h2><span class="step-badge">10</span> Tambah User</h2>
+            
+            <p>File: <code>application/views/dashboard/add_user.php</code></p>
+            
+            <p>Form untuk menambahkan user baru dengan role Admin, Dosen, atau Mahasiswa.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Tambah User<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">250px</span>; <span class="attribute">padding</span>: <span class="value">30px 35px</span>; <span class="attribute">min-height</span>: <span class="value">100vh</span>; <span class="attribute">background</span>: <span class="value">#f0f2f5</span>; }
+        <span class="selector">.page-header</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">15px</span>; }
+        <span class="selector">.page-header h3</span> { <span class="attribute">font-size</span>: <span class="value">26px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">margin</span>: <span class="value">0</span>; }
+        <span class="selector">.btn-back</span> { <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 24px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.btn-back:hover</span> { <span class="attribute">background</span>: <span class="value">#5a6268</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; }
+        <span class="selector">.form-card</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">padding</span>: <span class="value">30px</span>; <span class="attribute">max-width</span>: <span class="value">700px</span>; }
+        <span class="selector">.form-card .form-title</span> { <span class="attribute">font-size</span>: <span class="value">18px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">margin-bottom</span>: <span class="value">25px</span>; <span class="attribute">padding-bottom</span>: <span class="value">15px</span>; <span class="attribute">border-bottom</span>: <span class="value">2px solid #eef2f7</span>; }
+        <span class="selector">.form-group</span> { <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; }
+        <span class="selector">.form-group label</span> { <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">display</span>: <span class="value">block</span>; <span class="attribute">margin-bottom</span>: <span class="value">6px</span>; }
+        <span class="selector">.form-group .required</span> { <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">margin-left</span>: <span class="value">4px</span>; }
+        <span class="selector">.form-group .form-control</span> { <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">padding</span>: <span class="value">10px 16px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.form-group .form-control:focus</span> { <span class="attribute">border-color</span>: <span class="value">#4e73df</span>; <span class="attribute">box-shadow</span>: <span class="value">0 0 0 3px rgba(78,115,223,0.15)</span>; }
+        <span class="selector">.form-group .form-text</span> { <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; <span class="attribute">margin-top</span>: <span class="value">4px</span>; }
+        <span class="selector">.form-actions</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">margin-top</span>: <span class="value">25px</span>; <span class="attribute">padding-top</span>: <span class="value">20px</span>; <span class="attribute">border-top</span>: <span class="value">1px solid #eef2f7</span>; }
+        <span class="selector">.btn-submit</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        <span class="selector">.btn-submit:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 6px 20px rgba(78,115,223,0.4)</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.btn-cancel</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; }
+        <span class="selector">.btn-cancel:hover</span> { <span class="attribute">background</span>: <span class="value">#e9ecef</span>; <span class="attribute">color</span>: <span class="value">#333</span>; }
+        <span class="selector">.alert-custom</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.alert-custom.alert-danger</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #e17055</span>; }
+        <span class="selector">.alert-custom.alert-success</span> { <span class="attribute">background</span>: <span class="value">#e3f7f1</span>; <span class="attribute">color</span>: <span class="value">#00b894</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #00b894</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">20px 16px</span>; <span class="attribute">padding-top</span>: <span class="value">70px</span>; } <span class="selector">.form-actions</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; } <span class="selector">.form-actions .btn-submit</span>, <span class="selector">.form-actions .btn-cancel</span> { <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">width</span>: <span class="value">100%</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;?php</span> <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/sidebar'</span>); <span class="tag">?&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-wrapper"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"page-header"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h3&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-plus"</span> <span class="attribute">style</span>=<span class="value">"color: #4e73df;"</span><span class="tag">&gt;&lt;/i&gt;</span> Tambah User<span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-back"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-arrow-left"</span><span class="tag">&gt;&lt;/i&gt;</span> Kembali<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-card"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-title"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> Form Tambah User<span class="tag">&lt;/div&gt;</span>
+
+            <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>)): <span class="tag">?&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert-custom alert-danger"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-exclamation-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+            <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="value">"&lt;?= base_url('dashboard/save') ?&gt;"</span> <span class="attribute">method</span>=<span class="value">"post"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span> Username <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan username"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('username') ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 3 karakter, maksimal 50 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-lock"</span><span class="tag">&gt;&lt;/i&gt;</span> Password <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan password"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 4 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-check-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> Konfirmasi Password <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"confirm_password"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Konfirmasi password"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-tag"</span><span class="tag">&gt;&lt;/i&gt;</span> Role <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;select</span> <span class="attribute">name</span>=<span class="value">"role"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">""</span><span class="tag">&gt;</span>-- Pilih Role --<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"admin"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>) == <span class="string">'admin'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>👑 Admin<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"dosen"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>) == <span class="string">'dosen'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>👨‍🏫 Dosen<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"mahasiswa"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>) == <span class="string">'mahasiswa'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>🎓 Mahasiswa<span class="tag">&lt;/option&gt;</span>
+                    <span class="tag">&lt;/select&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-actions"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn-submit"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-save"</span><span class="tag">&gt;&lt;/i&gt;</span> Simpan User<span class="tag">&lt;/button&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-cancel"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-times"</span><span class="tag">&gt;&lt;/i&gt;</span> Batal<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 11: EDIT USER                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab11">
+            <h2><span class="step-badge">11</span> Edit User</h2>
+            
+            <p>File: <code>application/views/dashboard/edit_user.php</code></p>
+            
+            <p>Form untuk mengedit user dengan password opsional.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Edit User<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">250px</span>; <span class="attribute">padding</span>: <span class="value">30px 35px</span>; <span class="attribute">min-height</span>: <span class="value">100vh</span>; <span class="attribute">background</span>: <span class="value">#f0f2f5</span>; }
+        <span class="selector">.page-header</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">15px</span>; }
+        <span class="selector">.page-header h3</span> { <span class="attribute">font-size</span>: <span class="value">26px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">margin</span>: <span class="value">0</span>; }
+        <span class="selector">.btn-back</span> { <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 24px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.btn-back:hover</span> { <span class="attribute">background</span>: <span class="value">#5a6268</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; }
+        <span class="selector">.form-card</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">padding</span>: <span class="value">30px</span>; <span class="attribute">max-width</span>: <span class="value">700px</span>; }
+        <span class="selector">.form-card .form-title</span> { <span class="attribute">font-size</span>: <span class="value">18px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">margin-bottom</span>: <span class="value">25px</span>; <span class="attribute">padding-bottom</span>: <span class="value">15px</span>; <span class="attribute">border-bottom</span>: <span class="value">2px solid #eef2f7</span>; }
+        <span class="selector">.user-info-box</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">padding</span>: <span class="value">15px 20px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">border</span>: <span class="value">1px solid #eef2f7</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">15px</span>; }
+        <span class="selector">.user-info-box .info-icon</span> { <span class="attribute">font-size</span>: <span class="value">24px</span>; <span class="attribute">color</span>: <span class="value">#4e73df</span>; }
+        <span class="selector">.user-info-box .info-text</span> { <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">color</span>: <span class="value">#555</span>; }
+        <span class="selector">.user-info-box .info-text strong</span> { <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; }
+        <span class="selector">.form-group</span> { <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; }
+        <span class="selector">.form-group label</span> { <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">display</span>: <span class="value">block</span>; <span class="attribute">margin-bottom</span>: <span class="value">6px</span>; }
+        <span class="selector">.form-group .required</span> { <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">margin-left</span>: <span class="value">4px</span>; }
+        <span class="selector">.form-group .form-control</span> { <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">padding</span>: <span class="value">10px 16px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.form-group .form-control:focus</span> { <span class="attribute">border-color</span>: <span class="value">#4e73df</span>; <span class="attribute">box-shadow</span>: <span class="value">0 0 0 3px rgba(78,115,223,0.15)</span>; }
+        <span class="selector">.form-group .form-text</span> { <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; <span class="attribute">margin-top</span>: <span class="value">4px</span>; }
+        <span class="selector">.form-actions</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">margin-top</span>: <span class="value">25px</span>; <span class="attribute">padding-top</span>: <span class="value">20px</span>; <span class="attribute">border-top</span>: <span class="value">1px solid #eef2f7</span>; }
+        <span class="selector">.btn-submit</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        <span class="selector">.btn-submit:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 6px 20px rgba(78,115,223,0.4)</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.btn-cancel</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; }
+        <span class="selector">.btn-cancel:hover</span> { <span class="attribute">background</span>: <span class="value">#e9ecef</span>; <span class="attribute">color</span>: <span class="value">#333</span>; }
+        <span class="selector">.alert-custom</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.alert-custom.alert-danger</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #e17055</span>; }
+        <span class="selector">.alert-custom.alert-success</span> { <span class="attribute">background</span>: <span class="value">#e3f7f1</span>; <span class="attribute">color</span>: <span class="value">#00b894</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #00b894</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">20px 16px</span>; <span class="attribute">padding-top</span>: <span class="value">70px</span>; } <span class="selector">.form-actions</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; } <span class="selector">.form-actions .btn-submit</span>, <span class="selector">.form-actions .btn-cancel</span> { <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">width</span>: <span class="value">100%</span>; } <span class="selector">.user-info-box</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;?php</span> <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/sidebar'</span>); <span class="tag">?&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-wrapper"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"page-header"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h3&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-edit"</span> <span class="attribute">style</span>=<span class="value">"color: #4e73df;"</span><span class="tag">&gt;&lt;/i&gt;</span> Edit User<span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-back"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-arrow-left"</span><span class="tag">&gt;&lt;/i&gt;</span> Kembali<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-card"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-title"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> Form Edit User<span class="tag">&lt;/div&gt;</span>
+
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-info-box"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"info-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"info-text"</span><span class="tag">&gt;</span>
+                    Sedang mengedit user: <span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$user</span>-><span class="variable">username</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;</span>
+                    <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="value">"margin-left: 10px; color: #888;"</span><span class="tag">&gt;</span>|<span class="tag">&lt;/span&gt;</span>
+                    Role saat ini: 
+                    <span class="tag">&lt;strong&gt;</span>
+                        <span class="tag">&lt;?php</span> 
+                            <span class="variable">$roleLabels</span> = [<span class="string">'admin'</span> => <span class="string">'👑 Admin'</span>, <span class="string">'dosen'</span> => <span class="string">'👨‍🏫 Dosen'</span>, <span class="string">'mahasiswa'</span> => <span class="string">'🎓 Mahasiswa'</span>];
+                            <span class="keyword">echo</span> <span class="variable">$roleLabels</span>[<span class="variable">$user</span>-><span class="variable">role</span>] ?? <span class="variable">$user</span>-><span class="variable">role</span>;
+                        <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;/strong&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+
+            <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>)): <span class="tag">?&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert-custom alert-danger"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-exclamation-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+            <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="value">"&lt;?= base_url('dashboard/update/'.$user->id) ?&gt;"</span> <span class="attribute">method</span>=<span class="value">"post"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"hidden"</span> <span class="attribute">name</span>=<span class="value">"id"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= $user-&gt;id ?&gt;"</span><span class="tag">&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span> Username <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan username"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('username', $user-&gt;username) ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 3 karakter, maksimal 50 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-lock"</span><span class="tag">&gt;&lt;/i&gt;</span> Password <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="value">"font-weight: normal; color: #888; font-size: 12px;"</span><span class="tag">&gt;</span>(Kosongkan jika tidak ingin diubah)<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan password baru (opsional)"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 4 karakter, kosongkan jika tidak ingin mengubah password<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-check-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> Konfirmasi Password<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"confirm_password"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Konfirmasi password baru"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-tag"</span><span class="tag">&gt;&lt;/i&gt;</span> Role <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;select</span> <span class="attribute">name</span>=<span class="value">"role"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">""</span><span class="tag">&gt;</span>-- Pilih Role --<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"admin"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>, <span class="variable">$user</span>-><span class="variable">role</span>) == <span class="string">'admin'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>👑 Admin<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"dosen"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>, <span class="variable">$user</span>-><span class="variable">role</span>) == <span class="string">'dosen'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>👨‍🏫 Dosen<span class="tag">&lt;/option&gt;</span>
+                        <span class="tag">&lt;option</span> <span class="attribute">value</span>=<span class="value">"mahasiswa"</span> <span class="tag">&lt;?=</span> <span class="function">set_value</span>(<span class="string">'role'</span>, <span class="variable">$user</span>-><span class="variable">role</span>) == <span class="string">'mahasiswa'</span> ? <span class="string">'selected'</span> : <span class="string">''</span> <span class="tag">?&gt;</span><span class="tag">&gt;</span>🎓 Mahasiswa<span class="tag">&lt;/option&gt;</span>
+                    <span class="tag">&lt;/select&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-actions"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn-submit"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-save"</span><span class="tag">&gt;&lt;/i&gt;</span> Update User<span class="tag">&lt;/button&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-cancel"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-times"</span><span class="tag">&gt;&lt;/i&gt;</span> Batal<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 12: HAPUS USER                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab12">
+            <h2><span class="step-badge">12</span> Hapus User</h2>
+            
+            <p>File: <code>application/views/dashboard/confirm_delete.php</code></p>
+            
+            <p>Halaman konfirmasi sebelum menghapus user (tanpa JavaScript).</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Konfirmasi Hapus<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">250px</span>; <span class="attribute">padding</span>: <span class="value">30px 35px</span>; <span class="attribute">min-height</span>: <span class="value">100vh</span>; <span class="attribute">background</span>: <span class="value">#f0f2f5</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; }
+        <span class="selector">.confirm-card</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">padding</span>: <span class="value">40px</span>; <span class="attribute">max-width</span>: <span class="value">500px</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; }
+        <span class="selector">.confirm-card .icon</span> { <span class="attribute">font-size</span>: <span class="value">64px</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; }
+        <span class="selector">.confirm-card h3</span> { <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">font-size</span>: <span class="value">24px</span>; <span class="attribute">margin-bottom</span>: <span class="value">10px</span>; }
+        <span class="selector">.confirm-card p</span> { <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">font-size</span>: <span class="value">16px</span>; <span class="attribute">margin-bottom</span>: <span class="value">5px</span>; }
+        <span class="selector">.confirm-card .user-info</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">padding</span>: <span class="value">15px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin</span>: <span class="value">15px 0</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; }
+        <span class="selector">.confirm-card .user-info .username</span> { <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">font-size</span>: <span class="value">18px</span>; }
+        <span class="selector">.confirm-card .warning-text</span> { <span class="attribute">font-size</span>: <span class="value">13px</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">margin</span>: <span class="value">10px 0</span>; }
+        <span class="selector">.btn-group</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">margin-top</span>: <span class="value">25px</span>; <span class="attribute">justify-content</span>: <span class="value">center</span>; }
+        <span class="selector">.btn-yes</span> { <span class="attribute">background</span>: <span class="value">#e17055</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">12px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; }
+        <span class="selector">.btn-yes:hover</span> { <span class="attribute">background</span>: <span class="value">#d63031</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 6px 20px rgba(225,112,85,0.4)</span>; }
+        <span class="selector">.btn-no</span> { <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">12px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; }
+        <span class="selector">.btn-no:hover</span> { <span class="attribute">background</span>: <span class="value">#5a6268</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; }
+        <span class="selector">.alert-custom</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.alert-custom.alert-danger</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #e17055</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">20px 16px</span>; <span class="attribute">padding-top</span>: <span class="value">70px</span>; } <span class="selector">.btn-group</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; } <span class="selector">.btn-group a</span> { <span class="attribute">justify-content</span>: <span class="value">center</span>; } <span class="selector">.confirm-card</span> { <span class="attribute">padding</span>: <span class="value">25px</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;?php</span> <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/sidebar'</span>); <span class="tag">?&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-wrapper"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"confirm-card"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-exclamation-triangle"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;h3&gt;</span>⚠️ Konfirmasi Hapus<span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;p&gt;</span>Anda yakin ingin menghapus user berikut?<span class="tag">&lt;/p&gt;</span>
+
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span> 
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"username"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$user</span>-><span class="variable">username</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;br&gt;</span>
+                <span class="tag">&lt;small</span> <span class="attribute">style</span>=<span class="value">"color: #888;"</span><span class="tag">&gt;</span>
+                    Role: <span class="tag">&lt;?php</span> 
+                        <span class="variable">$roleLabels</span> = [<span class="string">'admin'</span> => <span class="string">'Admin'</span>, <span class="string">'dosen'</span> => <span class="string">'Dosen'</span>, <span class="string">'mahasiswa'</span> => <span class="string">'Mahasiswa'</span>];
+                        <span class="keyword">echo</span> <span class="variable">$roleLabels</span>[<span class="variable">$user</span>-><span class="variable">role</span>] ?? <span class="variable">$user</span>-><span class="variable">role</span>;
+                    <span class="tag">?&gt;</span>
+                <span class="tag">&lt;/small&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"warning-text"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-info-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> 
+                Tindakan ini tidak dapat dibatalkan!
+            <span class="tag">&lt;/p&gt;</span>
+
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"btn-group"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard/delete/'.$user->id) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-yes"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-trash"</span><span class="tag">&gt;&lt;/i&gt;</span> Ya, Hapus!
+                <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('dashboard') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-no"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-times"</span><span class="tag">&gt;&lt;/i&gt;</span> Batal
+                <span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Alur Hapus Tanpa JavaScript:</strong>
+                <ul>
+                    <li>User klik tombol "Hapus" di dashboard</li>
+                    <li>Redirect ke halaman <code>confirm_delete/{id}</code></li>
+                    <li>Tampilkan halaman konfirmasi dengan data user</li>
+                    <li>User klik "Ya, Hapus!" atau "Batal"</li>
+                    <li>Jika "Ya, Hapus!" → redirect ke <code>delete/{id}</code> → hapus data</li>
+                    <li>Tampilkan flashdata sukses/gagal → redirect ke dashboard</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 13: KESIMPULAN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab13">
+            <h2><span class="step-badge">13</span> Kesimpulan</h2>
+            
+            <p>Berikut adalah ringkasan fitur CRUD yang telah dibuat:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th style="background: #1a73e8; color: white;">Fitur</th>
+                        <th style="background: #1a73e8; color: white;">URL</th>
+                        <th style="background: #1a73e8; color: white;">Method</th>
+                        <th style="background: #1a73e8; color: white;">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">📋 List</span></td>
+                        <td><code>/dashboard</code></td>
+                        <td>GET</td>
+                        <td>Menampilkan semua user</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">🔍 Search</span></td>
+                        <td><code>/dashboard?search=keyword</code></td>
+                        <td>GET</td>
+                        <td>Mencari user berdasarkan username</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">➕ Tambah</span></td>
+                        <td><code>/dashboard/add</code></td>
+                        <td>GET</td>
+                        <td>Form tambah user</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">💾 Simpan</span></td>
+                        <td><code>/dashboard/save</code></td>
+                        <td>POST</td>
+                        <td>Proses simpan user baru</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">✏️ Edit</span></td>
+                        <td><code>/dashboard/edit/{id}</code></td>
+                        <td>GET</td>
+                        <td>Form edit user</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">🔄 Update</span></td>
+                        <td><code>/dashboard/update/{id}</code></td>
+                        <td>POST</td>
+                        <td>Proses update user</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">🗑️ Hapus</span></td>
+                        <td><code>/dashboard/confirm_delete/{id}</code></td>
+                        <td>GET</td>
+                        <td>Konfirmasi hapus user</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">🗑️ Delete</span></td>
+                        <td><code>/dashboard/delete/{id}</code></td>
+                        <td>GET</td>
+                        <td>Proses hapus user</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="conclusion-grid">
+                <div class="card before">
+                    <h4>❌ Sebelum (Tanpa Model)</h4>
+                    <ul>
+                        <li>Query SQL di dalam controller</li>
+                        <li>Controller menjadi "gemuk"</li>
+                        <li>Sulit di-maintenance</li>
+                        <li>Kode tidak reusable</li>
+                        <li>Tidak menerapkan MVC dengan baik</li>
+                    </ul>
+                </div>
+                <div class="card after">
+                    <h4>✅ Sesudah (Dengan Model)</h4>
+                    <ul>
+                        <li>Query SQL di dalam model</li>
+                        <li>Controller lebih "ramping"</li>
+                        <li>Mudah di-maintenance</li>
+                        <li>Kode reusable</li>
+                        <li>Menerapkan MVC dengan baik</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box success">
+                <strong>🎉 Keuntungan Menggunakan Model:</strong>
+                <ul>
+                    <li>Kode lebih terstruktur dan rapi</li>
+                    <li>Mudah untuk debugging</li>
+                    <li>Dapat digunakan kembali di controller lain</li>
+                    <li>Memisahkan logika bisnis dari controller</li>
+                    <li>Memudahkan proses maintenance dan pengembangan</li>
+                    <li>Sidebar terpisah sehingga mudah diubah</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Poin Penting:</strong>
+                <ul>
+                    <li>Selalu load model di <code>__construct()</code> controller</li>
+                    <li>Gunakan <code>htmlspecialchars()</code> untuk mencegah XSS</li>
+                    <li>Simpan session setelah login berhasil</li>
+                    <li>Sidebar dipanggil dengan <code>$this->load->view('layout/sidebar')</code></li>
+                    <li>CSS dan JS untuk sidebar berada di file sidebar.php</li>
+                    <li>Role yang tersedia: <code>admin</code>, <code>dosen</code>, <code>mahasiswa</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FOOTER                                                        -->
+        <!-- ============================================================ -->
+        <div class="footer">
+            <p>
+                Jobsheet ini dibuat untuk pembelajaran CodeIgniter 3<br>
+                <strong>CRUD Users dengan Model M_user, Sidebar, dan Dashboard</strong>
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: #aaa;">
+                &copy; <?= date('Y') ?> - Dibuat dengan ❤️ untuk pembelajaran
+            </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DOWNLOAD BUTTON                                               -->
+        <!-- ============================================================ -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-download" onclick="window.print()">
+                📥 Download PDF
+            </button>
+            <p style="font-size: 13px; color: #888; margin-top: 8px;">
+                Klik tombol di atas untuk menyimpan sebagai PDF
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set tanggal otomatis
+        document.getElementById('date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+
+</body>
+</html>

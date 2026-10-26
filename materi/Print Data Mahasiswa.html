@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobsheet 5 - Print Data Mahasiswa CodeIgniter 3</title>
+    <style>
+        /* ============================================================ */
+        /* STYLES FOR JOBSHEET                                           */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        /* ========== HEADER ========== */
+        .jobsheet-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .jobsheet-header h1 {
+            color: #1a73e8;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .jobsheet-header .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .jobsheet-header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .jobsheet-header .meta span {
+            background: #f0f2f5;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* ========== TOC ========== */
+        .toc {
+            background: #f8f9fc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .toc h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc ul li {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .toc ul li a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h2 .step-badge {
+            background: #1a73e8;
+            color: white;
+            font-size: 14px;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.danger {
+            background: #fde8e8;
+            border-left-color: #e17055;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box ul {
+            margin: 8px 0 0 20px;
+        }
+
+        /* ========== CODE BLOCK ========== */
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-block .keyword { color: #0000ff; }
+        .code-block .string { color: #a31515; }
+        .code-block .comment { color: #008000; }
+        .code-block .function { color: #795e26; }
+        .code-block .variable { color: #001080; }
+        .code-block .operator { color: #333; }
+        .code-block .bracket { color: #333; }
+        .code-block .tag { color: #800000; }
+        .code-block .attribute { color: #ff0000; }
+        .code-block .value { color: #0000ff; }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fc;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== CLASS DIAGRAM ========== */
+        .class-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            margin: 15px 0;
+        }
+
+        .class-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .class-box .class-name {
+            background: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .class-box .class-section {
+            padding: 8px 20px;
+        }
+
+        .class-box .class-section .title {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .class-box .class-section .item {
+            font-size: 13px;
+            padding: 3px 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .class-box .class-section .item .type {
+            color: #888;
+        }
+
+        .class-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #888;
+            padding: 10px;
+        }
+
+        .class-arrow .arrow-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* ========== FILE STRUCTURE ========== */
+        .file-structure {
+            background: #f8f9fc;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .file-structure .folder { color: #795e26; font-weight: bold; }
+        .file-structure .file { color: #001080; }
+        .file-structure .highlight { color: #008000; }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.blue { background: #e3f0ff; color: #1a73e8; }
+        .badge.green { background: #e3f7f1; color: #00b894; }
+        .badge.orange { background: #fff3e0; color: #ff9800; }
+        .badge.red { background: #fde8e8; color: #e17055; }
+        .badge.purple { background: #f0e6ff; color: #764ba2; }
+
+        /* ========== FEATURE GRID ========== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-grid .item {
+            background: #f8f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-grid .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-grid .item .label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ========== FLOW CHART ========== */
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .flow-chart .step {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .flow-chart .step.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .flow-chart .arrow {
+            font-size: 20px;
+            color: #888;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ========== DOWNLOAD BUTTON ========== */
+        .btn-download {
+            display: inline-block;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 15px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            .btn-download {
+                display: none;
+            }
+            .code-block {
+                background: #ffffff !important;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .code-block .keyword { color: #0000ff; }
+            .code-block .string { color: #a31515; }
+            .code-block .comment { color: #008000; }
+            .code-block .function { color: #795e26; }
+            .code-block .variable { color: #001080; }
+            .code-block .tag { color: #800000; }
+            .code-block .attribute { color: #ff0000; }
+            .code-block .value { color: #0000ff; }
+            .file-structure {
+                background: #f8f9fc;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .file-structure .folder { color: #795e26; }
+            .file-structure .file { color: #001080; }
+            .file-structure .highlight { color: #008000; }
+            .toc ul {
+                columns: 1;
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-chart {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .jobsheet-header h1 {
+                font-size: 24px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            .jobsheet-header .meta {
+                gap: 10px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .flow-chart {
+                flex-direction: column;
+            }
+            .flow-chart .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="jobsheet">
+
+        <!-- ============================================================ -->
+        <!-- HEADER                                                        -->
+        <!-- ============================================================ -->
+        <div class="jobsheet-header">
+            <h1>📄 Jobsheet 5 - Print Data Mahasiswa</h1>
+            <p class="subtitle">Implementasi Cetak Laporan Data Mahasiswa dengan CodeIgniter 3</p>
+            <div class="meta">
+                <span>📅 Tanggal: <span id="date"></span></span>
+                <span>⏱ Durasi: 1.5 Jam</span>
+                <span>📚 Level: Pemula - Menengah</span>
+                <span>👨‍💻 Framework: CodeIgniter 3</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DAFTAR ISI                                                   -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h3>📑 Daftar Isi</h3>
+            <ul>
+                <li><a href="#bab1">1. Pendahuluan</a></li>
+                <li><a href="#bab2">2. Class Diagram</a></li>
+                <li><a href="#bab3">3. Struktur Folder</a></li>
+                <li><a href="#bab4">4. Controller Mhs</a></li>
+                <li><a href="#bab5">5. View Print</a></li>
+                <li><a href="#bab6">6. Update Sidebar</a></li>
+                <li><a href="#bab7">7. Update Routes</a></li>
+                <li><a href="#bab8">8. Fitur Print</a></li>
+                <li><a href="#bab9">9. Kesimpulan</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 1: PENDAHULUAN                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab1">
+            <h2><span class="step-badge">1</span> Pendahuluan</h2>
+            
+            <p>
+                Pada jobsheet ini, kita akan menambahkan fitur <strong>Print Data Mahasiswa</strong> pada aplikasi yang telah dibuat sebelumnya.
+                Fitur ini memungkinkan pengguna untuk mencetak laporan data mahasiswa dalam bentuk halaman cetak yang rapi dan profesional.
+            </p>
+
+            <p>
+                Fitur print akan menampilkan semua data mahasiswa dalam bentuk tabel yang siap dicetak menggunakan fitur <strong>Print / Save as PDF</strong> dari browser.
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Tujuan Pembelajaran:</strong>
+                <ul>
+                    <li>Memahami konsep print laporan di CodeIgniter</li>
+                    <li>Mampu membuat halaman cetak dengan CSS media print</li>
+                    <li>Mampu menambahkan submenu pada sidebar</li>
+                    <li>Mampu menampilkan data dalam format laporan</li>
+                    <li>Mampu mencetak atau menyimpan sebagai PDF</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Prasyarat:</strong>
+                <ul>
+                    <li>CodeIgniter 3 sudah terinstall</li>
+                    <li>Sudah menyelesaikan Jobsheet 4 (Upload Foto Mahasiswa)</li>
+                    <li>Web server (XAMPP/Laragon) berjalan</li>
+                    <li>Dasar PHP, SQL, dan HTML</li>
+                </ul>
+            </div>
+
+            <div class="feature-grid">
+                <div class="item">
+                    <span class="icon">🖨️</span>
+                    <span class="label">Print Data</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📋</span>
+                    <span class="label">Laporan</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📊</span>
+                    <span class="label">Tabel</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📄</span>
+                    <span class="label">PDF</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🔍</span>
+                    <span class="label">Search</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📁</span>
+                    <span class="label">Submenu</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 2: CLASS DIAGRAM                                         -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab2">
+            <h2><span class="step-badge">2</span> Class Diagram</h2>
+            
+            <p>Berikut adalah class diagram untuk Print Data Mahasiswa:</p>
+
+            <div class="class-diagram-wrapper">
+                <!-- Controller Mhs -->
+                <div class="class-box">
+                    <div class="class-name">Controller Mhs</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $load : Library</div>
+                        <div class="item">- $db : Database</div>
+                        <div class="item">- $session : Session</div>
+                        <div class="item">- $upload : Upload</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ index()</div>
+                        <div class="item">+ add()</div>
+                        <div class="item">+ save()</div>
+                        <div class="item">+ edit($nim)</div>
+                        <div class="item">+ update($nim)</div>
+                        <div class="item">+ confirm_delete($nim)</div>
+                        <div class="item">+ delete($nim)</div>
+                        <div class="item"><span class="badge green">+ print_data()</span></div>
+                        <div class="item">- upload_foto($nim, $old_foto)</div>
+                    </div>
+                </div>
+
+                <div class="class-arrow">
+                    <span class="arrow-label">Menampilkan</span>
+                    ⬇️
+                </div>
+
+                <!-- View Print -->
+                <div class="class-box">
+                    <div class="class-name">View Print</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $data : Array</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Files +</div>
+                        <div class="item">+ print.php</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Keterangan Class Diagram:</strong>
+                <ul>
+                    <li><strong>Controller Mhs</strong> - Menangani semua operasi CRUD + print</li>
+                    <li><strong>Method print_data()</strong> - Method baru untuk menampilkan halaman print</li>
+                    <li><strong>View Print</strong> - Tampilan laporan yang siap dicetak</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 3: STRUKTUR FOLDER                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab3">
+            <h2><span class="step-badge">3</span> Struktur Folder</h2>
+            
+            <p>Berikut adalah struktur folder untuk Print Data Mahasiswa:</p>
+
+            <div class="file-structure">
+<pre>
+ci_a/
+├── application/
+│   ├── <span class="folder">controllers/</span>
+│   │   └── <span class="file">Mhs.php</span>             <span class="highlight">← Controller (tambah print_data)</span>
+│   ├── <span class="folder">views/</span>
+│   │   └── <span class="folder">dashboard/</span>
+│   │       └── <span class="folder">mhs/</span>
+│   │           ├── <span class="file">index.php</span>        <span class="highlight">← Daftar mahasiswa</span>
+│   │           ├── <span class="file">add.php</span>          <span class="highlight">← Form tambah</span>
+│   │           ├── <span class="file">edit.php</span>         <span class="highlight">← Form edit</span>
+│   │           ├── <span class="file">confirm_delete.php</span> <span class="highlight">← Konfirmasi hapus</span>
+│   │           └── <span class="file">print.php</span>       <span class="highlight">← Halaman print</span>
+│   └── <span class="folder">config/</span>
+│       ├── <span class="file">routes.php</span>          <span class="highlight">← Tambah route print</span>
+│       └── <span class="file">database.php</span>
+└── <span class="folder">uploads/</span>
+    └── <span class="folder">foto/</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Catatan:</strong>
+                <ul>
+                    <li>File <code>print.php</code> adalah file baru untuk halaman cetak</li>
+                    <li>File <code>Mhs.php</code> diupdate dengan method <code>print_data()</code></li>
+                    <li>File <code>routes.php</code> diupdate dengan route <code>mhs/print_data</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 4: CONTROLLER MHS                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab4">
+            <h2><span class="step-badge">4</span> Controller Mhs</h2>
+            
+            <p>File: <code>application/controllers/Mhs.php</code></p>
+            
+            <p>Tambahkan method <code>print_data()</code> pada controller Mhs.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">/**
+ * Print data mahasiswa
+ * URL: /mhs/print_data
+ */</span>
+<span class="keyword">public function</span> <span class="function">print_data</span>() {
+    <span class="variable">$keyword</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">get</span>(<span class="string">'search'</span>);
+    
+    <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)) {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">search_mhs</span>(<span class="variable">$keyword</span>);
+        <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="variable">$keyword</span>;
+    } <span class="keyword">else</span> {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_all_mhs</span>();
+        <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="string">''</span>;
+    }
+    
+    <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Print Data Mahasiswa'</span>;
+    <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/print'</span>, <span class="variable">$data</span>);
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Method print_data():</strong>
+                <ul>
+                    <li>Mengambil semua data mahasiswa atau hasil pencarian</li>
+                    <li>Mengirim data ke view <code>print.php</code></li>
+                    <li>Mendukung pencarian (search) seperti di halaman utama</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 5: VIEW PRINT                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab5">
+            <h2><span class="step-badge">5</span> View Print</h2>
+            
+            <p>File: <code>application/views/dashboard/mhs/print.php</code></p>
+            
+            <p>Halaman cetak laporan data mahasiswa dengan desain profesional.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Print Data Mahasiswa<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="comment">/* ===== PRINT STYLES ===== */</span>
+        <span class="selector">*</span> { <span class="attribute">margin</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">0</span>; <span class="attribute">box-sizing</span>: <span class="value">border-box</span>; }
+        <span class="selector">body</span> { <span class="attribute">font-family</span>: <span class="value">'Times New Roman', Times, serif</span>; <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">20px</span>; <span class="attribute">color</span>: <span class="value">#333</span>; }
+        <span class="selector">.print-container</span> { <span class="attribute">max-width</span>: <span class="value">1100px</span>; <span class="attribute">margin</span>: <span class="value">0 auto</span>; <span class="attribute">padding</span>: <span class="value">20px</span>; }
+        
+        <span class="comment">/* ===== HEADER ===== */</span>
+        <span class="selector">.print-header</span> { <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">border-bottom</span>: <span class="value">3px double #333</span>; <span class="attribute">padding-bottom</span>: <span class="value">15px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; }
+        <span class="selector">.print-header h1</span> { <span class="attribute">font-size</span>: <span class="value">28px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">text-transform</span>: <span class="value">uppercase</span>; <span class="attribute">letter-spacing</span>: <span class="value">2px</span>; }
+        <span class="selector">.print-header h2</span> { <span class="attribute">font-size</span>: <span class="value">18px</span>; <span class="attribute">font-weight</span>: <span class="value">400</span>; <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">margin-top</span>: <span class="value">5px</span>; }
+        <span class="selector">.print-header .info</span> { <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">color</span>: <span class="value">#666</span>; <span class="attribute">margin-top</span>: <span class="value">8px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">30px</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; }
+        <span class="selector">.print-header .info span</span> { <span class="attribute">padding</span>: <span class="value">2px 12px</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">border-radius</span>: <span class="value">4px</span>; <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; }
+        
+        <span class="comment">/* ===== TABLE ===== */</span>
+        <span class="selector">.table-print</span> { <span class="attribute">width</span>: <span class="value">100%</span>; <span class="attribute">border-collapse</span>: <span class="value">collapse</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">margin-top</span>: <span class="value">15px</span>; }
+        <span class="selector">.table-print thead</span> { <span class="attribute">background</span>: <span class="value">#1a73e8</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.table-print th</span> { <span class="attribute">padding</span>: <span class="value">10px 12px</span>; <span class="attribute">text-align</span>: <span class="value">left</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-transform</span>: <span class="value">uppercase</span>; <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">border</span>: <span class="value">1px solid #1a73e8</span>; }
+        <span class="selector">.table-print td</span> { <span class="attribute">padding</span>: <span class="value">8px 12px</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">vertical-align</span>: <span class="value">middle</span>; }
+        <span class="selector">.table-print tbody tr:nth-child(even)</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; }
+        <span class="selector">.table-print .foto-cell</span> { <span class="attribute">text-align</span>: <span class="value">center</span>; }
+        <span class="selector">.table-print .foto-cell img</span> { <span class="attribute">width</span>: <span class="value">40px</span>; <span class="attribute">height</span>: <span class="value">40px</span>; <span class="attribute">border-radius</span>: <span class="value">50%</span>; <span class="attribute">object-fit</span>: <span class="value">cover</span>; <span class="attribute">border</span>: <span class="value">2px solid #ddd</span>; }
+        <span class="selector">.table-print .no-data</span> { <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">padding</span>: <span class="value">40px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; <span class="attribute">font-size</span>: <span class="value">16px</span>; }
+        
+        <span class="comment">/* ===== FOOTER ===== */</span>
+        <span class="selector">.print-footer</span> { <span class="attribute">margin-top</span>: <span class="value">30px</span>; <span class="attribute">padding-top</span>: <span class="value">15px</span>; <span class="attribute">border-top</span>: <span class="value">2px solid #333</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">font-size</span>: <span class="value">13px</span>; <span class="attribute">color</span>: <span class="value">#666</span>; }
+        <span class="selector">.print-footer .ttd</span> { <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">margin-top</span>: <span class="value">20px</span>; }
+        <span class="selector">.print-footer .ttd .line</span> { <span class="attribute">display</span>: <span class="value">inline-block</span>; <span class="attribute">width</span>: <span class="value">200px</span>; <span class="attribute">border-top</span>: <span class="value">1px solid #333</span>; <span class="attribute">margin-top</span>: <span class="value">40px</span>; <span class="attribute">padding-top</span>: <span class="value">5px</span>; }
+        
+        <span class="comment">/* ===== BUTTONS ===== */</span>
+        <span class="selector">.btn-print</span> { <span class="attribute">display</span>: <span class="value">inline-block</span>; <span class="attribute">background</span>: <span class="value">#1a73e8</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 30px</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">border-radius</span>: <span class="value">6px</span>; <span class="attribute">font-size</span>: <span class="value">16px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; <span class="attribute">margin-top</span>: <span class="value">20px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; }
+        <span class="selector">.btn-print:hover</span> { <span class="attribute">background</span>: <span class="value">#1557b0</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 4px 15px rgba(26,115,232,0.3)</span>; }
+        <span class="selector">.btn-back</span> { <span class="attribute">display</span>: <span class="value">inline-block</span>; <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 30px</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">border-radius</span>: <span class="value">6px</span>; <span class="attribute">font-size</span>: <span class="value">16px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; <span class="attribute">margin-top</span>: <span class="value">20px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; }
+        <span class="selector">.btn-back:hover</span> { <span class="attribute">background</span>: <span class="value">#5a6268</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; }
+        
+        <span class="comment">/* ===== PRINT MEDIA ===== */</span>
+        <span class="selector">@media print</span> {
+            <span class="selector">body</span> { <span class="attribute">padding</span>: <span class="value">10px</span>; <span class="attribute">background</span>: <span class="value">white</span>; }
+            <span class="selector">.print-container</span> { <span class="attribute">padding</span>: <span class="value">0</span>; }
+            <span class="selector">.btn-print, .btn-back</span> { <span class="attribute">display</span>: <span class="value">none !important</span>; }
+            <span class="selector">.no-print</span> { <span class="attribute">display</span>: <span class="value">none !important</span>; }
+            <span class="selector">.table-print thead</span> { <span class="attribute">background</span>: <span class="value">#1a73e8 !important</span>; <span class="attribute">color</span>: <span class="value">white !important</span>; <span class="attribute">-webkit-print-color-adjust</span>: <span class="value">exact !important</span>; <span class="attribute">print-color-adjust</span>: <span class="value">exact !important</span>; }
+            <span class="selector">.table-print tbody tr:nth-child(even)</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc !important</span>; <span class="attribute">-webkit-print-color-adjust</span>: <span class="value">exact !important</span>; <span class="attribute">print-color-adjust</span>: <span class="value">exact !important</span>; }
+            <span class="selector">.print-header</span> { <span class="attribute">border-bottom</span>: <span class="value">3px double #333 !important</span>; }
+            <span class="selector">.print-footer</span> { <span class="attribute">border-top</span>: <span class="value">2px solid #333 !important</span>; }
+        }
+        
+        <span class="comment">/* ===== RESPONSIVE ===== */</span>
+        <span class="selector">@media (max-width: 768px)</span> {
+            <span class="selector">.print-header .info</span> { <span class="attribute">gap</span>: <span class="value">10px</span>; <span class="attribute">flex-direction</span>: <span class="value">column</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; }
+            <span class="selector">.table-print</span> { <span class="attribute">font-size</span>: <span class="value">12px</span>; }
+            <span class="selector">.table-print th, .table-print td</span> { <span class="attribute">padding</span>: <span class="value">6px 8px</span>; }
+            <span class="selector">.print-footer</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        }
+    <span class="tag">&lt;/style&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"print-container"</span><span class="tag">&gt;</span>
+
+        <span class="comment">&lt;!-- HEADER --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"print-header"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h1&gt;</span>📊 Data Mahasiswa<span class="tag">&lt;/h1&gt;</span>
+            <span class="tag">&lt;h2&gt;</span>MyApp - Sistem Informasi Manajemen Mahasiswa<span class="tag">&lt;/h2&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span&gt;</span>📅 Tanggal: <span class="tag">&lt;?=</span> <span class="function">date</span>(<span class="string">'d F Y'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;span&gt;</span>⏱ Waktu: <span class="tag">&lt;?=</span> <span class="function">date</span>(<span class="string">'H:i:s'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;span&gt;</span>👥 Total: <span class="tag">&lt;?=</span> <span class="function">count</span>(<span class="variable">$mhs</span>) <span class="tag">?&gt;</span> Mahasiswa<span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)): <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;span&gt;</span>🔍 Pencarian: "<span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$keyword</span>) <span class="tag">?&gt;</span>"<span class="tag">&lt;/span&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- TABLE --&gt;</span>
+        <span class="tag">&lt;table</span> <span class="attribute">class</span>=<span class="value">"table-print"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;thead&gt;</span>
+                <span class="tag">&lt;tr&gt;</span>
+                    <span class="tag">&lt;th</span> <span class="attribute">style</span>=<span class="value">"width: 40px; text-align: center;"</span><span class="tag">&gt;</span>No<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th</span> <span class="attribute">style</span>=<span class="value">"width: 60px; text-align: center;"</span><span class="tag">&gt;</span>Foto<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>NIM<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Nama<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Program Studi<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Jurusan<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;/tr&gt;</span>
+            <span class="tag">&lt;/thead&gt;</span>
+            <span class="tag">&lt;tbody&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$mhs</span>)): <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="variable">$no</span> = <span class="number">1</span>; <span class="keyword">foreach</span> (<span class="variable">$mhs</span> <span class="keyword">as</span> <span class="variable">$row</span>): <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;tr&gt;</span>
+                            <span class="tag">&lt;td</span> <span class="attribute">style</span>=<span class="value">"text-align: center;"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$no</span>++ <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td</span> <span class="attribute">class</span>=<span class="value">"foto-cell"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$row</span>-><span class="variable">foto</span>) && <span class="function">file_exists</span>(<span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$row</span>-><span class="variable">foto</span>)): <span class="tag">?&gt;</span>
+                                    <span class="tag">&lt;img</span> <span class="attribute">src</span>=<span class="value">"&lt;?= base_url('uploads/foto/' . $row-&gt;foto) ?&gt;"</span> <span class="attribute">alt</span>=<span class="value">"Foto"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+                                    <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="value">"width: 40px; height: 40px; border-radius: 50%; background: #e9ecef; display: inline-flex; align-items: center; justify-content: center; color: #aaa; font-size: 16px;"</span><span class="tag">&gt;</span>
+                                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                                    <span class="tag">&lt;/span&gt;</span>
+                                <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+                            <span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">nim</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">nama</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">prodi</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+                            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">jurusan</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+                        <span class="tag">&lt;/tr&gt;</span>
+                    <span class="tag">&lt;?php</span> <span class="keyword">endforeach</span>; <span class="tag">?&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;tr&gt;</span>
+                        <span class="tag">&lt;td</span> <span class="attribute">colspan</span>=<span class="value">"6"</span> <span class="attribute">class</span>=<span class="value">"no-data"</span><span class="tag">&gt;</span>
+                            <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-inbox"</span><span class="tag">&gt;&lt;/i&gt;</span><br>
+                            <span class="tag">&lt;?=</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)) ? <span class="string">'Data dengan keyword "'</span> . <span class="function">htmlspecialchars</span>(<span class="variable">$keyword</span>) . <span class="string">'" tidak ditemukan!'</span> : <span class="string">'Belum ada data mahasiswa!'</span> <span class="tag">?&gt;</span>
+                        <span class="tag">&lt;/td&gt;</span>
+                    <span class="tag">&lt;/tr&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+            <span class="tag">&lt;/tbody&gt;</span>
+        <span class="tag">&lt;/table&gt;</span>
+
+        <span class="comment">&lt;!-- FOOTER --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"print-footer"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div&gt;</span>
+                <span class="tag">&lt;p&gt;</span>Dicetak oleh: <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'username'</span>) ?: <span class="string">'Admin'</span> <span class="tag">?&gt;</span><span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;p&gt;</span>MyApp v1.0<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"ttd"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"line"</span><span class="tag">&gt;</span>_________________________<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;p&gt;</span>Mengetahui,<span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;p&gt;</span>Kepala Program Studi<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="comment">&lt;!-- BUTTONS --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"no-print"</span> <span class="attribute">style</span>=<span class="value">"text-align: center; margin-top: 20px;"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">class</span>=<span class="value">"btn-print"</span> <span class="attribute">onclick</span>=<span class="value">"window.print()"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-print"</span><span class="tag">&gt;&lt;/i&gt;</span> Cetak / Print PDF
+            <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-back"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-arrow-left"</span><span class="tag">&gt;&lt;/i&gt;</span> Kembali
+            <span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+    <span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Fitur View Print:</strong>
+                <ul>
+                    <li><span class="badge green">✅</span> Header laporan (judul, tanggal, total data)</li>
+                    <li><span class="badge green">✅</span> Tabel data mahasiswa (No, Foto, NIM, Nama, Prodi, Jurusan)</li>
+                    <li><span class="badge green">✅</span> Footer laporan (dicetak oleh, tanda tangan)</li>
+                    <li><span class="badge green">✅</span> Tombol Cetak / Print PDF</li>
+                    <li><span class="badge green">✅</span> CSS Media Print untuk hasil cetak yang rapi</li>
+                    <li><span class="badge green">✅</span> Responsif untuk berbagai ukuran layar</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 6: UPDATE SIDEBAR                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab6">
+            <h2><span class="step-badge">6</span> Update Sidebar</h2>
+            
+            <p>File: <code>application/views/layout/sidebar.php</code></p>
+            
+            <p>Tambahkan submenu Mahasiswa dengan menu <strong>List Mahasiswa</strong> dan <strong>Print Laporan</strong>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== MENU MAHASISWA (dengan submenu) ===== --&gt;</span>
+<span class="tag">&lt;li&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">class</span>=<span class="value">"has-submenu &lt;?= (uri_string() == 'mhs' || $this-&gt;uri-&gt;segment(1) == 'mhs') ? 'active' : '' ?&gt;"</span> <span class="attribute">onclick</span>=<span class="value">"toggleSubmenu(event, 'mhsMenu')"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"nav-icon"</span><span class="tag">&gt;</span>🎓<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"nav-text"</span><span class="tag">&gt;</span>Mahasiswa<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"nav-arrow"</span><span class="tag">&gt;</span>▼<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;ul</span> <span class="attribute">class</span>=<span class="value">"sub-menu &lt;?= (uri_string() == 'mhs' || $this-&gt;uri-&gt;segment(1) == 'mhs') ? 'open' : '' ?&gt;"</span> <span class="attribute">id</span>=<span class="value">"mhsMenu"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;li&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"&lt;?= (uri_string() == 'mhs' && $this-&gt;uri-&gt;segment(2) == '') ? 'active' : '' ?&gt;"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"sub-icon"</span><span class="tag">&gt;</span>📋<span class="tag">&lt;/span&gt;</span> List Mahasiswa
+            <span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/li&gt;</span>
+        <span class="tag">&lt;li&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs/print_data') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"&lt;?= (uri_string() == 'mhs/print_data') ? 'active' : '' ?&gt;"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"sub-icon"</span><span class="tag">&gt;</span>🖨️<span class="tag">&lt;/span&gt;</span> Print Laporan
+            <span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/li&gt;</span>
+    <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/li&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Sidebar:</strong>
+                <ul>
+                    <li>Menu Mahasiswa memiliki submenu: <strong>List Mahasiswa</strong> dan <strong>Print Laporan</strong></li>
+                    <li>Submenu akan terbuka otomatis jika berada di halaman mahasiswa</li>
+                    <li>Menu aktif akan diberi highlight</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 7: UPDATE ROUTES                                         -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab7">
+            <h2><span class="step-badge">7</span> Update Routes</h2>
+            
+            <p>File: <code>application/config/routes.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">// ============================================================</span>
+<span class="comment">// MAHASISWA</span>
+<span class="comment">// ============================================================</span>
+<span class="variable">$route</span>[<span class="string">'mhs'</span>] = <span class="string">'Mhs/index'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/add'</span>] = <span class="string">'Mhs/add'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/save'</span>] = <span class="string">'Mhs/save'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/edit/(:any)'</span>] = <span class="string">'Mhs/edit/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/update/(:any)'</span>] = <span class="string">'Mhs/update/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/confirm_delete/(:any)'</span>] = <span class="string">'Mhs/confirm_delete/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/delete/(:any)'</span>] = <span class="string">'Mhs/delete/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/print_data'</span>] = <span class="string">'Mhs/print_data'</span>;  <span class="comment">// Route Print</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Routes:</strong>
+                <ul>
+                    <li>Menambahkan route <code>mhs/print_data</code> untuk mengakses halaman print</li>
+                    <li>Route ini akan memanggil method <code>print_data()</code> pada controller Mhs</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 8: FITUR PRINT                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab8">
+            <h2><span class="step-badge">8</span> Fitur Print</h2>
+            
+            <div class="flow-chart">
+                <div class="step active">Akses Menu</div>
+                <span class="arrow">→</span>
+                <div class="step">Halaman Print</div>
+                <span class="arrow">→</span>
+                <div class="step">Lihat Laporan</div>
+                <span class="arrow">→</span>
+                <div class="step">Klik Cetak</div>
+                <span class="arrow">→</span>
+                <div class="step">Print/PDF</div>
+                <span class="arrow">→</span>
+                <div class="step">Selesai</div>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Fitur Print:</strong>
+                <ul>
+                    <li><strong>Print Semua Data</strong> - Mencetak semua data mahasiswa</li>
+                    <li><strong>Print Hasil Pencarian</strong> - Mencetak data berdasarkan keyword pencarian</li>
+                    <li><strong>Header Cetak</strong> - Judul, tanggal, waktu, total data</li>
+                    <li><strong>Tabel Data</strong> - No, Foto, NIM, Nama, Prodi, Jurusan</li>
+                    <li><strong>Footer Cetak</strong> - Dicetak oleh, tanda tangan</li>
+                    <li><strong>Tombol Cetak</strong> - Print / Save as PDF</li>
+                    <li><strong>Tombol Kembali</strong> - Kembali ke halaman daftar</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Cara Penggunaan:</strong>
+                <ul>
+                    <li>Klik menu <strong>Mahasiswa → Print Laporan</strong> di sidebar</li>
+                    <li>Halaman laporan akan tampil</li>
+                    <li>Klik tombol <strong>Cetak / Print PDF</strong> untuk mencetak</li>
+                    <li>Pilih <strong>Save as PDF</strong> pada dialog print untuk menyimpan sebagai PDF</li>
+                    <li>Klik <strong>Kembali</strong> untuk kembali ke halaman daftar mahasiswa</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Struktur Menu Sidebar Terbaru:</strong>
+                <ul>
+                    <li><strong>MAIN MENU</strong>
+                        <ul>
+                            <li>📊 Dashboard</li>
+                            <li>👤 Profile</li>
+                        </ul>
+                    </li>
+                    <li><strong>MANAGEMENT</strong>
+                        <ul>
+                            <li>👥 Users
+                                <ul>
+                                    <li>📋 List User</li>
+                                    <li>➕ Add User</li>
+                                </ul>
+                            </li>
+                            <li>🎓 Mahasiswa
+                                <ul>
+                                    <li>📋 List Mahasiswa</li>
+                                    <li>🖨️ Print Laporan</li>
+                                </ul>
+                            </li>
+                            <li>🚪 Logout</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 9: KESIMPULAN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab9">
+            <h2><span class="step-badge">9</span> Kesimpulan</h2>
+            
+            <p>Berikut adalah ringkasan fitur Print Data Mahasiswa:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th style="background: #1a73e8; color: white;">Fitur</th>
+                        <th style="background: #1a73e8; color: white;">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">🖨️ Print</span></td>
+                        <td>Mencetak semua data mahasiswa</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">🔍 Search Print</span></td>
+                        <td>Mencetak hasil pencarian</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">📄 PDF</span></td>
+                        <td>Save as PDF menggunakan browser</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge purple">📋 Laporan</span></td>
+                        <td>Tampilan laporan profesional</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">📁 Submenu</span></td>
+                        <td>Submenu Print Laporan di sidebar</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box success">
+                <strong>🎉 Keuntungan Fitur Print:</strong>
+                <ul>
+                    <li>Memudahkan pencetakan laporan data mahasiswa</li>
+                    <li>Tampilan cetak yang rapi dan profesional</li>
+                    <li>Dapat menyimpan sebagai PDF tanpa plugin tambahan</li>
+                    <li>Mendukung pencarian sebelum mencetak</li>
+                    <li>Navigasi yang mudah melalui submenu</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Poin Penting:</strong>
+                <ul>
+                    <li>Gunakan <code>@media print</code> untuk mengatur tampilan saat dicetak</li>
+                    <li>Gunakan <code>-webkit-print-color-adjust: exact</code> untuk mempertahankan warna</li>
+                    <li>Sembunyikan tombol aksi saat print dengan <code>.no-print</code></li>
+                    <li>Pastikan data yang ditampilkan sudah lengkap</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>📁 File yang Dibuat/Diupdate:</strong>
+                <ul>
+                    <li><code>controllers/Mhs.php</code> - Tambah method <code>print_data()</code></li>
+                    <li><code>views/dashboard/mhs/print.php</code> - File baru untuk halaman print</li>
+                    <li><code>views/layout/sidebar.php</code> - Tambah submenu Mahasiswa</li>
+                    <li><code>config/routes.php</code> - Tambah route <code>mhs/print_data</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FOOTER                                                        -->
+        <!-- ============================================================ -->
+        <div class="footer">
+            <p>
+                Jobsheet 5 - Print Data Mahasiswa CodeIgniter 3<br>
+                <strong>Implementasi Cetak Laporan Data Mahasiswa</strong>
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: #aaa;">
+                &copy; <?= date('Y') ?> - Dibuat dengan ❤️ untuk pembelajaran
+            </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DOWNLOAD BUTTON                                               -->
+        <!-- ============================================================ -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-download" onclick="window.print()">
+                📥 Download PDF
+            </button>
+            <p style="font-size: 13px; color: #888; margin-top: 8px;">
+                Klik tombol di atas untuk menyimpan sebagai PDF
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set tanggal otomatis
+        document.getElementById('date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+
+</body>
+</html>

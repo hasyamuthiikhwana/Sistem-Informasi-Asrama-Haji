@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobsheet 4 - Upload Foto Mahasiswa CodeIgniter 3</title>
+    <style>
+        /* ============================================================ */
+        /* STYLES FOR JOBSHEET                                           */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        /* ========== HEADER ========== */
+        .jobsheet-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .jobsheet-header h1 {
+            color: #1a73e8;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .jobsheet-header .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .jobsheet-header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .jobsheet-header .meta span {
+            background: #f0f2f5;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* ========== TOC ========== */
+        .toc {
+            background: #f8f9fc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .toc h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc ul li {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .toc ul li a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h2 .step-badge {
+            background: #1a73e8;
+            color: white;
+            font-size: 14px;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.danger {
+            background: #fde8e8;
+            border-left-color: #e17055;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box ul {
+            margin: 8px 0 0 20px;
+        }
+
+        /* ========== CODE BLOCK ========== */
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-block .keyword { color: #0000ff; }
+        .code-block .string { color: #a31515; }
+        .code-block .comment { color: #008000; }
+        .code-block .function { color: #795e26; }
+        .code-block .variable { color: #001080; }
+        .code-block .operator { color: #333; }
+        .code-block .bracket { color: #333; }
+        .code-block .tag { color: #800000; }
+        .code-block .attribute { color: #ff0000; }
+        .code-block .value { color: #0000ff; }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fc;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== CLASS DIAGRAM ========== */
+        .class-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            margin: 15px 0;
+        }
+
+        .class-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .class-box .class-name {
+            background: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .class-box .class-section {
+            padding: 8px 20px;
+        }
+
+        .class-box .class-section .title {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .class-box .class-section .item {
+            font-size: 13px;
+            padding: 3px 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .class-box .class-section .item .type {
+            color: #888;
+        }
+
+        .class-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #888;
+            padding: 10px;
+        }
+
+        .class-arrow .arrow-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* ========== FILE STRUCTURE ========== */
+        .file-structure {
+            background: #f8f9fc;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .file-structure .folder { color: #795e26; font-weight: bold; }
+        .file-structure .file { color: #001080; }
+        .file-structure .highlight { color: #008000; }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.blue { background: #e3f0ff; color: #1a73e8; }
+        .badge.green { background: #e3f7f1; color: #00b894; }
+        .badge.orange { background: #fff3e0; color: #ff9800; }
+        .badge.red { background: #fde8e8; color: #e17055; }
+        .badge.purple { background: #f0e6ff; color: #764ba2; }
+
+        /* ========== FEATURE GRID ========== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-grid .item {
+            background: #f8f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-grid .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-grid .item .label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ========== FLOW CHART ========== */
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .flow-chart .step {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .flow-chart .step.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .flow-chart .arrow {
+            font-size: 20px;
+            color: #888;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ========== DOWNLOAD BUTTON ========== */
+        .btn-download {
+            display: inline-block;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 15px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            .btn-download {
+                display: none;
+            }
+            .code-block {
+                background: #ffffff !important;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .code-block .keyword { color: #0000ff; }
+            .code-block .string { color: #a31515; }
+            .code-block .comment { color: #008000; }
+            .code-block .function { color: #795e26; }
+            .code-block .variable { color: #001080; }
+            .code-block .tag { color: #800000; }
+            .code-block .attribute { color: #ff0000; }
+            .code-block .value { color: #0000ff; }
+            .file-structure {
+                background: #f8f9fc;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .file-structure .folder { color: #795e26; }
+            .file-structure .file { color: #001080; }
+            .file-structure .highlight { color: #008000; }
+            .toc ul {
+                columns: 1;
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-chart {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .jobsheet-header h1 {
+                font-size: 24px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            .jobsheet-header .meta {
+                gap: 10px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .flow-chart {
+                flex-direction: column;
+            }
+            .flow-chart .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="jobsheet">
+
+        <!-- ============================================================ -->
+        <!-- HEADER                                                        -->
+        <!-- ============================================================ -->
+        <div class="jobsheet-header">
+            <h1>📄 Jobsheet 4 - Upload Foto Mahasiswa</h1>
+            <p class="subtitle">Implementasi Upload Foto pada CRUD Mahasiswa dengan CodeIgniter 3</p>
+            <div class="meta">
+                <span>📅 Tanggal: <span id="date"></span></span>
+                <span>⏱ Durasi: 2 Jam</span>
+                <span>📚 Level: Pemula - Menengah</span>
+                <span>👨‍💻 Framework: CodeIgniter 3</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DAFTAR ISI                                                   -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h3>📑 Daftar Isi</h3>
+            <ul>
+                <li><a href="#bab1">1. Pendahuluan</a></li>
+                <li><a href="#bab2">2. Class Diagram</a></li>
+                <li><a href="#bab3">3. Struktur Folder</a></li>
+                <li><a href="#bab4">4. Database</a></li>
+                <li><a href="#bab5">5. Model M_mhs</a></li>
+                <li><a href="#bab6">6. Controller Mhs</a></li>
+                <li><a href="#bab7">7. View Add</a></li>
+                <li><a href="#bab8">8. View Edit</a></li>
+                <li><a href="#bab9">9. View Index</a></li>
+                <li><a href="#bab10">10. View Confirm Delete</a></li>
+                <li><a href="#bab11">11. Alur Upload</a></li>
+                <li><a href="#bab12">12. Kesimpulan</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 1: PENDAHULUAN                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab1">
+            <h2><span class="step-badge">1</span> Pendahuluan</h2>
+            
+            <p>
+                Pada jobsheet ini, kita akan menambahkan fitur <strong>Upload Foto</strong> pada CRUD Mahasiswa yang telah dibuat sebelumnya. 
+                Fitur ini memungkinkan pengguna untuk mengunggah foto profil mahasiswa saat menambah atau mengedit data.
+            </p>
+
+            <p>
+                Foto yang diupload akan disimpan di folder <code>uploads/foto/</code> dengan nama file yang unik (NIM + timestamp), 
+                dan nama file akan disimpan di database pada kolom <code>foto</code>.
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Tujuan Pembelajaran:</strong>
+                <ul>
+                    <li>Memahami konsep upload file di CodeIgniter 3</li>
+                    <li>Mampu mengkonfigurasi library upload</li>
+                    <li>Mampu membuat form dengan enctype multipart/form-data</li>
+                    <li>Mampu menampilkan preview foto sebelum upload</li>
+                    <li>Mampu menghapus file foto saat data dihapus</li>
+                    <li>Mampu mengupdate foto dengan menghapus foto lama</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Prasyarat:</strong>
+                <ul>
+                    <li>CodeIgniter 3 sudah terinstall</li>
+                    <li>Sudah menyelesaikan Jobsheet 2 (CRUD Mahasiswa)</li>
+                    <li>Web server (XAMPP/Laragon) berjalan</li>
+                    <li>Dasar PHP, SQL, dan HTML</li>
+                </ul>
+            </div>
+
+            <div class="feature-grid">
+                <div class="item">
+                    <span class="icon">📷</span>
+                    <span class="label">Upload Foto</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🖼️</span>
+                    <span class="label">Preview Foto</span>
+                </div>
+                <div class="item">
+                    <span class="icon">✏️</span>
+                    <span class="label">Update Foto</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🗑️</span>
+                    <span class="label">Hapus Foto</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🛡️</span>
+                    <span class="label">Validasi</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📁</span>
+                    <span class="label">Folder Otomatis</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 2: CLASS DIAGRAM                                         -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab2">
+            <h2><span class="step-badge">2</span> Class Diagram</h2>
+            
+            <p>Berikut adalah class diagram untuk Upload Foto Mahasiswa:</p>
+
+            <div class="class-diagram-wrapper">
+                <!-- Controller Mhs -->
+                <div class="class-box">
+                    <div class="class-name">Controller Mhs</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $load : Library</div>
+                        <div class="item">- $db : Database</div>
+                        <div class="item">- $session : Session</div>
+                        <div class="item">- $upload : Upload</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ index()</div>
+                        <div class="item">+ add()</div>
+                        <div class="item">+ save()</div>
+                        <div class="item">+ edit($nim)</div>
+                        <div class="item">+ update($nim)</div>
+                        <div class="item">+ confirm_delete($nim)</div>
+                        <div class="item">+ delete($nim)</div>
+                        <div class="item">- upload_foto($nim, $old_foto)</div>
+                    </div>
+                </div>
+
+                <div class="class-arrow">
+                    <span class="arrow-label">Menggunakan</span>
+                    ⬇️
+                </div>
+
+                <!-- Model M_mhs -->
+                <div class="class-box">
+                    <div class="class-name">Model M_mhs</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $db : Database</div>
+                        <div class="item">- $table : string = 'mhs'</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ get_all_mhs()</div>
+                        <div class="item">+ search_mhs($keyword)</div>
+                        <div class="item">+ get_mhs_by_nim($nim)</div>
+                        <div class="item">+ insert_mhs($data)</div>
+                        <div class="item">+ update_mhs($nim, $data)</div>
+                        <div class="item">+ delete_mhs($nim)</div>
+                        <div class="item">+ nim_exists($nim)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Keterangan Class Diagram:</strong>
+                <ul>
+                    <li><strong>Controller Mhs</strong> - Mengatur semua operasi CRUD + upload foto</li>
+                    <li><strong>Model M_mhs</strong> - Mengelola interaksi dengan database</li>
+                    <li><strong>Method upload_foto()</strong> - Fungsi privat untuk menangani upload</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 3: STRUKTUR FOLDER                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab3">
+            <h2><span class="step-badge">3</span> Struktur Folder</h2>
+            
+            <p>Berikut adalah struktur folder untuk Upload Foto Mahasiswa:</p>
+
+            <div class="file-structure">
+<pre>
+ci_a/
+├── <span class="folder">uploads/</span>                       <span class="highlight">← Folder upload (di root)</span>
+│   └── <span class="folder">foto/</span>                     <span class="highlight">← Folder penyimpanan foto</span>
+│       ├── 2024001_1234567890.jpg
+│       ├── 2024002_1234567891.png
+│       └── ...
+├── application/
+│   ├── <span class="folder">controllers/</span>
+│   │   └── <span class="file">Mhs.php</span>             <span class="highlight">← Controller dengan upload</span>
+│   ├── <span class="folder">models/</span>
+│   │   └── <span class="file">M_mhs.php</span>           <span class="highlight">← Model Mahasiswa</span>
+│   └── <span class="folder">views/</span>
+│       └── <span class="folder">dashboard/</span>
+│           └── <span class="folder">mhs/</span>
+│               ├── <span class="file">index.php</span>        <span class="highlight">← Daftar dengan foto</span>
+│               ├── <span class="file">add.php</span>          <span class="highlight">← Form tambah + upload</span>
+│               ├── <span class="file">edit.php</span>         <span class="highlight">← Form edit + upload</span>
+│               └── <span class="file">confirm_delete.php</span> <span class="highlight">← Konfirmasi hapus</span>
+└── config/
+    └── database.php
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Catatan:</strong>
+                <ul>
+                    <li>Folder <code>uploads/foto/</code> berada di <strong>root project</strong></li>
+                    <li>Folder akan dibuat <strong>otomatis</strong> oleh script jika belum ada</li>
+                    <li>Nama file foto: <code>NIM_timestamp.ekstensi</code> (contoh: 2024001_1703123456.jpg)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 4: DATABASE                                              -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab4">
+            <h2><span class="step-badge">4</span> Database</h2>
+            
+            <p>Tambahkan kolom <code>foto</code> pada tabel <code>mhs</code>:</p>
+
+            <div class="code-block">
+                <span class="lang-label">SQL</span>
+<pre><span class="keyword">-- Tambah kolom foto</span>
+<span class="keyword">ALTER TABLE</span> mhs <span class="keyword">ADD COLUMN</span> foto <span class="keyword">VARCHAR</span>(100) <span class="keyword">NULL</span> <span class="keyword">AFTER</span> jurusan;
+
+<span class="comment">-- Struktur tabel mhs terbaru</span>
+<span class="keyword">CREATE TABLE</span> mhs (
+    nim <span class="keyword">VARCHAR</span>(20) <span class="keyword">PRIMARY KEY</span>,
+    nama <span class="keyword">VARCHAR</span>(100) <span class="keyword">NOT NULL</span>,
+    prodi <span class="keyword">VARCHAR</span>(50) <span class="keyword">NOT NULL</span>,
+    jurusan <span class="keyword">VARCHAR</span>(50) <span class="keyword">NOT NULL</span>,
+    foto <span class="keyword">VARCHAR</span>(100) <span class="keyword">NULL</span>
+);
+</pre>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <tr><th>Field</th><th>Type</th><th>Key</th><th>Keterangan</th></tr>
+                    <tr><td><strong>nim</strong></td><td>VARCHAR(20)</td><td><strong>PRIMARY KEY</strong></td><td>NIM Mahasiswa</td></tr>
+                    <tr><td>nama</td><td>VARCHAR(100)</td><td>-</td><td>Nama Mahasiswa</td></tr>
+                    <tr><td>prodi</td><td>VARCHAR(50)</td><td>-</td><td>Program Studi</td></tr>
+                    <tr><td>jurusan</td><td>VARCHAR(50)</td><td>-</td><td>Jurusan</td></tr>
+                    <tr><td><strong>foto</strong></td><td>VARCHAR(100)</td><td>-</td><td>Nama file foto (NULL jika tidak ada)</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 5: MODEL M_MHS                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab5">
+            <h2><span class="step-badge">5</span> Model M_mhs</h2>
+            
+            <p>File: <code>application/models/M_mhs.php</code></p>
+            
+            <p>Model ini menangani semua operasi database untuk tabel <code>mhs</code>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">M_mhs</span> <span class="keyword">extends</span> <span class="function">CI_Model</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">database</span>();
+    }
+    
+    <span class="comment">// READ - Get all mahasiswa</span>
+    <span class="keyword">public function</span> <span class="function">get_all_mhs</span>() {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">// READ - Search mahasiswa</span>
+    <span class="keyword">public function</span> <span class="function">search_mhs</span>(<span class="variable">$keyword</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">group_start</span>();
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">like</span>(<span class="string">'nim'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'nama'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'prodi'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'jurusan'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">group_end</span>();
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">// READ - Get mahasiswa by NIM</span>
+    <span class="keyword">public function</span> <span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get_where</span>(<span class="string">'mhs'</span>, [<span class="string">'nim'</span> => <span class="variable">$nim</span>])-><span class="function">row</span>();
+    }
+    
+    <span class="comment">// CREATE - Insert mahasiswa</span>
+    <span class="keyword">public function</span> <span class="function">insert_mhs</span>(<span class="variable">$data</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">insert</span>(<span class="string">'mhs'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// UPDATE - Update mahasiswa</span>
+    <span class="keyword">public function</span> <span class="function">update_mhs</span>(<span class="variable">$nim</span>, <span class="variable">$data</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">update</span>(<span class="string">'mhs'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// DELETE - Delete mahasiswa</span>
+    <span class="keyword">public function</span> <span class="function">delete_mhs</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">delete</span>(<span class="string">'mhs'</span>);
+    }
+    
+    <span class="comment">// HELPER - Check if NIM exists</span>
+    <span class="keyword">public function</span> <span class="function">nim_exists</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="variable">$query</span> = <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>);
+        <span class="keyword">return</span> <span class="variable">$query</span>-><span class="function">num_rows</span>() > <span class="number">0</span>;
+    }
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Model:</strong>
+                <ul>
+                    <li>Tidak ada perubahan signifikan dari Jobsheet 2</li>
+                    <li>Model sudah mendukung semua field termasuk <code>foto</code></li>
+                    <li>Semua method tetap sama karena kolom foto hanya tambahan</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 6: CONTROLLER MHS                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab6">
+            <h2><span class="step-badge">6</span> Controller Mhs</h2>
+            
+            <p>File: <code>application/controllers/Mhs.php</code></p>
+            
+            <p>Controller ini menangani semua operasi CRUD Mahasiswa dengan upload foto.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">Mhs</span> <span class="keyword">extends</span> <span class="function">CI_Controller</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">model</span>(<span class="string">'M_mhs'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'form'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'file'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">library</span>(<span class="string">'form_validation'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">library</span>(<span class="string">'upload'</span>);
+        
+        <span class="keyword">if</span>(!<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'logged_in'</span>)) {
+            <span class="function">redirect</span>(<span class="string">'auth'</span>);
+        }
+    }
+    
+    <span class="comment">// ===== READ =====</span>
+    <span class="keyword">public function</span> <span class="function">index</span>() {
+        <span class="variable">$keyword</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">get</span>(<span class="string">'search'</span>);
+        
+        <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)) {
+            <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">search_mhs</span>(<span class="variable">$keyword</span>);
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="variable">$keyword</span>;
+        } <span class="keyword">else</span> {
+            <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_all_mhs</span>();
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="string">''</span>;
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/index'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// ===== CREATE =====</span>
+    <span class="keyword">public function</span> <span class="function">add</span>() {
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/add'</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">save</span>() {
+        <span class="comment">// Validasi form</span>
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nim'</span>, <span class="string">'NIM'</span>, <span class="string">'required|min_length[5]|max_length[20]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nama'</span>, <span class="string">'Nama'</span>, <span class="string">'required|min_length[3]|max_length[100]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'prodi'</span>, <span class="string">'Prodi'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'jurusan'</span>, <span class="string">'Jurusan'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'required'</span>, <span class="string">'{field} harus diisi!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'min_length'</span>, <span class="string">'{field} minimal {param} karakter!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'max_length'</span>, <span class="string">'{field} maksimal {param} karakter!'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'mhs/add'</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$nim</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nim'</span>);
+            
+            <span class="comment">// Cek NIM duplikat</span>
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">nim_exists</span>(<span class="variable">$nim</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'NIM '</span> . <span class="variable">$nim</span> . <span class="string">' sudah terdaftar!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs/add'</span>);
+            }
+            
+            <span class="comment">// Upload foto</span>
+            <span class="variable">$foto_name</span> = <span class="variable">$this</span>-><span class="function">upload_foto</span>(<span class="variable">$nim</span>);
+            
+            <span class="variable">$data</span> = [
+                <span class="string">'nim'</span> => <span class="variable">$nim</span>,
+                <span class="string">'nama'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nama'</span>),
+                <span class="string">'prodi'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'prodi'</span>),
+                <span class="string">'jurusan'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'jurusan'</span>),
+                <span class="string">'foto'</span> => <span class="variable">$foto_name</span>
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">insert_mhs</span>(<span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil ditambahkan!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== UPDATE =====</span>
+    <span class="keyword">public function</span> <span class="function">edit</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'mhs'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/edit'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$mhs</span> = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$mhs</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="comment">// Validasi form</span>
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nim'</span>, <span class="string">'NIM'</span>, <span class="string">'required|min_length[5]|max_length[20]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nama'</span>, <span class="string">'Nama'</span>, <span class="string">'required|min_length[3]|max_length[100]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'prodi'</span>, <span class="string">'Prodi'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'jurusan'</span>, <span class="string">'Jurusan'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'required'</span>, <span class="string">'{field} harus diisi!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'min_length'</span>, <span class="string">'{field} minimal {param} karakter!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'max_length'</span>, <span class="string">'{field} maksimal {param} karakter!'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'mhs/edit/'</span> . <span class="variable">$nim</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$new_nim</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nim'</span>);
+            
+            <span class="comment">// Cek NIM duplikat jika berubah</span>
+            <span class="keyword">if</span> (<span class="variable">$new_nim</span> != <span class="variable">$nim</span> && <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">nim_exists</span>(<span class="variable">$new_nim</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'NIM '</span> . <span class="variable">$new_nim</span> . <span class="string">' sudah terdaftar!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs/edit/'</span> . <span class="variable">$nim</span>);
+            }
+            
+            <span class="comment">// Upload foto baru</span>
+            <span class="variable">$foto_name</span> = <span class="variable">$this</span>-><span class="function">upload_foto</span>(<span class="variable">$new_nim</span>, <span class="variable">$mhs</span>-><span class="variable">foto</span>);
+            
+            <span class="variable">$data</span> = [
+                <span class="string">'nim'</span> => <span class="variable">$new_nim</span>,
+                <span class="string">'nama'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nama'</span>),
+                <span class="string">'prodi'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'prodi'</span>),
+                <span class="string">'jurusan'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'jurusan'</span>),
+                <span class="string">'foto'</span> => <span class="variable">$foto_name</span>
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">update_mhs</span>(<span class="variable">$nim</span>, <span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil diupdate!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== DELETE =====</span>
+    <span class="keyword">public function</span> <span class="function">confirm_delete</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'mhs'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/confirm_delete'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">delete</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$mhs</span> = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$mhs</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="comment">// Hapus foto jika ada</span>
+        <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$mhs</span>-><span class="variable">foto</span>)) {
+            <span class="variable">$foto_path</span> = <span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$mhs</span>-><span class="variable">foto</span>;
+            <span class="keyword">if</span> (<span class="function">file_exists</span>(<span class="variable">$foto_path</span>)) {
+                <span class="function">unlink</span>(<span class="variable">$foto_path</span>);
+            }
+        }
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">delete_mhs</span>(<span class="variable">$nim</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil dihapus!'</span>);
+        }
+        
+        <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+    }
+    
+    <span class="comment">// ===== PRIVATE METHOD UPLOAD =====</span>
+    <span class="keyword">private function</span> <span class="function">upload_foto</span>(<span class="variable">$nim</span>, <span class="variable">$old_foto</span> = <span class="keyword">null</span>) {
+        <span class="comment">// Cek apakah ada file yang diupload</span>
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$_FILES</span>[<span class="string">'foto'</span>][<span class="string">'name'</span>])) {
+            <span class="keyword">return</span> <span class="variable">$old_foto</span>;
+        }
+        
+        <span class="comment">// Path folder upload</span>
+        <span class="variable">$upload_path</span> = <span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span>;
+        
+        <span class="comment">// Buat folder jika belum ada</span>
+        <span class="keyword">if</span> (!<span class="function">is_dir</span>(<span class="variable">$upload_path</span>)) {
+            <span class="function">mkdir</span>(<span class="variable">$upload_path</span>, <span class="number">0777</span>, <span class="keyword">true</span>);
+        }
+        
+        <span class="comment">// Konfigurasi upload</span>
+        <span class="variable">$config</span>[<span class="string">'upload_path'</span>] = <span class="variable">$upload_path</span>;
+        <span class="variable">$config</span>[<span class="string">'allowed_types'</span>] = <span class="string">'jpg|jpeg|png|gif'</span>;
+        <span class="variable">$config</span>[<span class="string">'max_size'</span>] = <span class="number">2048</span>;
+        <span class="variable">$config</span>[<span class="string">'file_name'</span>] = <span class="variable">$nim</span> . <span class="string">'_'</span> . <span class="function">time</span>();
+        <span class="variable">$config</span>[<span class="string">'overwrite'</span>] = <span class="keyword">true</span>;
+        
+        <span class="variable">$this</span>-><span class="variable">upload</span>-><span class="function">initialize</span>(<span class="variable">$config</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">upload</span>-><span class="function">do_upload</span>(<span class="string">'foto'</span>)) {
+            <span class="variable">$upload_data</span> = <span class="variable">$this</span>-><span class="variable">upload</span>-><span class="function">data</span>();
+            <span class="variable">$foto_name</span> = <span class="variable">$upload_data</span>[<span class="string">'file_name'</span>];
+            
+            <span class="comment">// Hapus foto lama jika ada</span>
+            <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$old_foto</span>)) {
+                <span class="variable">$old_path</span> = <span class="variable">$upload_path</span> . <span class="variable">$old_foto</span>;
+                <span class="keyword">if</span> (<span class="function">file_exists</span>(<span class="variable">$old_path</span>) && <span class="variable">$old_foto</span> != <span class="variable">$foto_name</span>) {
+                    <span class="function">unlink</span>(<span class="variable">$old_path</span>);
+                }
+            }
+            
+            <span class="keyword">return</span> <span class="variable">$foto_name</span>;
+        } <span class="keyword">else</span> {
+            <span class="variable">$error</span> = <span class="variable">$this</span>-><span class="variable">upload</span>-><span class="function">display_errors</span>(<span class="string">''</span>, <span class="string">''</span>);
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Upload foto gagal: '</span> . <span class="variable">$error</span>);
+            <span class="keyword">return</span> <span class="variable">$old_foto</span>;
+        }
+    }
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Fitur Controller:</strong>
+                <ul>
+                    <li><span class="badge green">✅</span> Upload foto dengan nama unik (NIM_timestamp)</li>
+                    <li><span class="badge green">✅</span> Buat folder otomatis jika belum ada</li>
+                    <li><span class="badge green">✅</span> Hapus foto lama saat update</li>
+                    <li><span class="badge green">✅</span> Hapus foto saat data dihapus</li>
+                    <li><span class="badge green">✅</span> Validasi file (jpg, png, gif, max 2MB)</li>
+                    <li><span class="badge green">✅</span> Flashdata untuk error upload</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 7: VIEW ADD                                              -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab7">
+            <h2><span class="step-badge">7</span> View Add (Tambah Mahasiswa)</h2>
+            
+            <p>File: <code>application/views/dashboard/mhs/add.php</code></p>
+            
+            <p>Form tambah mahasiswa dengan upload foto dan preview.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Tambah Mahasiswa<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">250px</span>; <span class="attribute">padding</span>: <span class="value">30px 35px</span>; <span class="attribute">min-height</span>: <span class="value">100vh</span>; <span class="attribute">background</span>: <span class="value">#f0f2f5</span>; }
+        <span class="selector">.page-header</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">justify-content</span>: <span class="value">space-between</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; <span class="attribute">flex-wrap</span>: <span class="value">wrap</span>; <span class="attribute">gap</span>: <span class="value">15px</span>; }
+        <span class="selector">.page-header h3</span> { <span class="attribute">font-size</span>: <span class="value">26px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; <span class="attribute">margin</span>: <span class="value">0</span>; }
+        <span class="selector">.btn-back</span> { <span class="attribute">background</span>: <span class="value">#6c757d</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">10px 24px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.btn-back:hover</span> { <span class="attribute">background</span>: <span class="value">#5a6268</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; }
+        <span class="selector">.form-card</span> { <span class="attribute">background</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">padding</span>: <span class="value">30px</span>; <span class="attribute">max-width</span>: <span class="value">700px</span>; }
+        <span class="selector">.form-card .form-title</span> { <span class="attribute">font-size</span>: <span class="value">18px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">margin-bottom</span>: <span class="value">25px</span>; <span class="attribute">padding-bottom</span>: <span class="value">15px</span>; <span class="attribute">border-bottom</span>: <span class="value">2px solid #eef2f7</span>; }
+        <span class="selector">.form-group</span> { <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; }
+        <span class="selector">.form-group label</span> { <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">display</span>: <span class="value">block</span>; <span class="attribute">margin-bottom</span>: <span class="value">6px</span>; }
+        <span class="selector">.form-group .required</span> { <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">margin-left</span>: <span class="value">4px</span>; }
+        <span class="selector">.form-group .form-control</span> { <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">padding</span>: <span class="value">10px 16px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.form-group .form-control:focus</span> { <span class="attribute">border-color</span>: <span class="value">#4e73df</span>; <span class="attribute">box-shadow</span>: <span class="value">0 0 0 3px rgba(78,115,223,0.15)</span>; }
+        <span class="selector">.form-group .form-text</span> { <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; <span class="attribute">margin-top</span>: <span class="value">4px</span>; }
+        <span class="selector">.foto-preview</span> { <span class="attribute">width</span>: <span class="value">150px</span>; <span class="attribute">height</span>: <span class="value">150px</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">border</span>: <span class="value">2px dashed #ddd</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">margin-top</span>: <span class="value">10px</span>; <span class="attribute">overflow</span>: <span class="value">hidden</span>; <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; }
+        <span class="selector">.foto-preview img</span> { <span class="attribute">width</span>: <span class="value">100%</span>; <span class="attribute">height</span>: <span class="value">100%</span>; <span class="attribute">object-fit</span>: <span class="value">cover</span>; }
+        <span class="selector">.foto-preview .placeholder</span> { <span class="attribute">color</span>: <span class="value">#aaa</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; }
+        <span class="selector">.foto-preview .placeholder i</span> { <span class="attribute">font-size</span>: <span class="value">40px</span>; <span class="attribute">display</span>: <span class="value">block</span>; <span class="attribute">margin-bottom</span>: <span class="value">5px</span>; }
+        <span class="selector">.form-actions</span> { <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">margin-top</span>: <span class="value">25px</span>; <span class="attribute">padding-top</span>: <span class="value">20px</span>; <span class="attribute">border-top</span>: <span class="value">1px solid #eef2f7</span>; }
+        <span class="selector">.btn-submit</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #4e73df 0%, #224abe 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">cursor</span>: <span class="value">pointer</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">10px</span>; }
+        <span class="selector">.btn-submit:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 6px 20px rgba(78,115,223,0.4)</span>; <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.btn-cancel</span> { <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">color</span>: <span class="value">#555</span>; <span class="attribute">border</span>: <span class="value">1px solid #ddd</span>; <span class="attribute">padding</span>: <span class="value">11px 35px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">display</span>: <span class="value">inline-flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">8px</span>; }
+        <span class="selector">.btn-cancel:hover</span> { <span class="attribute">background</span>: <span class="value">#e9ecef</span>; <span class="attribute">color</span>: <span class="value">#333</span>; }
+        <span class="selector">.alert-custom</span> { <span class="attribute">padding</span>: <span class="value">14px 20px</span>; <span class="attribute">border-radius</span>: <span class="value">8px</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">display</span>: <span class="value">flex</span>; <span class="attribute">align-items</span>: <span class="value">center</span>; <span class="attribute">gap</span>: <span class="value">12px</span>; <span class="attribute">font-size</span>: <span class="value">14px</span>; }
+        <span class="selector">.alert-custom.alert-danger</span> { <span class="attribute">background</span>: <span class="value">#fde8e8</span>; <span class="attribute">color</span>: <span class="value">#e17055</span>; <span class="attribute">border-left</span>: <span class="value">4px solid #e17055</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.content-wrapper</span> { <span class="attribute">margin-left</span>: <span class="value">0</span>; <span class="attribute">padding</span>: <span class="value">20px 16px</span>; <span class="attribute">padding-top</span>: <span class="value">70px</span>; } <span class="selector">.form-actions</span> { <span class="attribute">flex-direction</span>: <span class="value">column</span>; } <span class="selector">.form-actions .btn-submit</span>, <span class="selector">.form-actions .btn-cancel</span> { <span class="attribute">justify-content</span>: <span class="value">center</span>; <span class="attribute">width</span>: <span class="value">100%</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+    <span class="tag">&lt;?php</span> <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/sidebar'</span>); <span class="tag">?&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-wrapper"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"page-header"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h3&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-plus"</span> <span class="attribute">style</span>=<span class="value">"color: #4e73df;"</span><span class="tag">&gt;&lt;/i&gt;</span> Tambah Mahasiswa<span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-back"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-arrow-left"</span><span class="tag">&gt;&lt;/i&gt;</span> Kembali<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-card"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-title"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-circle"</span><span class="tag">&gt;&lt;/i&gt;</span> Form Tambah Mahasiswa<span class="tag">&lt;/div&gt;</span>
+
+            <span class="comment">&lt;!-- Flashdata error --&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>)): <span class="tag">?&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"alert-custom alert-danger"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-exclamation-circle"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                    <span class="tag">&lt;?=</span> <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">flashdata</span>(<span class="string">'error'</span>) <span class="tag">?&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+
+            <span class="comment">&lt;!-- Form dengan enctype untuk upload --&gt;</span>
+            <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="value">"&lt;?= base_url('mhs/save') ?&gt;"</span> <span class="attribute">method</span>=<span class="value">"post"</span> <span class="attribute">enctype</span>=<span class="value">"multipart/form-data"</span><span class="tag">&gt;</span>
+                
+                <span class="comment">&lt;!-- NIM --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-id-card"</span><span class="tag">&gt;&lt;/i&gt;</span> NIM <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"nim"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan NIM"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('nim') ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 5 karakter, maksimal 20 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="comment">&lt;!-- Nama --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span> Nama <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"nama"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan nama mahasiswa"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('nama') ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 3 karakter, maksimal 100 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="comment">&lt;!-- Prodi --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-graduation-cap"</span><span class="tag">&gt;&lt;/i&gt;</span> Program Studi <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"prodi"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan program studi"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('prodi') ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 3 karakter, maksimal 50 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="comment">&lt;!-- Jurusan --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-building"</span><span class="tag">&gt;&lt;/i&gt;</span> Jurusan <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"required"</span><span class="tag">&gt;</span>*<span class="tag">&lt;/span&gt;&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"jurusan"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan jurusan"</span> <span class="attribute">value</span>=<span class="value">"&lt;?= set_value('jurusan') ?&gt;"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Minimal 3 karakter, maksimal 50 karakter<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="comment">&lt;!-- Foto Upload --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-camera"</span><span class="tag">&gt;&lt;/i&gt;</span> Foto<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"file"</span> <span class="attribute">name</span>=<span class="value">"foto"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">accept</span>=<span class="value">"image/*"</span> <span class="attribute">id</span>=<span class="value">"fotoInput"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Format: JPG, JPEG, PNG, GIF | Maks: 2MB<span class="tag">&lt;/div&gt;</span>
+                    
+                    <span class="comment">&lt;!-- Preview Foto --&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"foto-preview"</span> <span class="attribute">id</span>=<span class="value">"fotoPreview"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"placeholder"</span><span class="tag">&gt;</span>
+                            <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-camera"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                            <span class="tag">&lt;span&gt;</span>Belum ada foto<span class="tag">&lt;/span&gt;</span>
+                        <span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+
+                <span class="comment">&lt;!-- Tombol --&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-actions"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn-submit"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-save"</span><span class="tag">&gt;&lt;/i&gt;</span> Simpan
+                    <span class="tag">&lt;/button&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-cancel"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-times"</span><span class="tag">&gt;&lt;/i&gt;</span> Batal
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="comment">&lt;!-- JavaScript Preview Foto --&gt;</span>
+    <span class="tag">&lt;script&gt;</span>
+        document.<span class="function">getElementById</span>(<span class="string">'fotoInput'</span>).<span class="function">addEventListener</span>(<span class="string">'change'</span>, <span class="keyword">function</span>(e) {
+            <span class="keyword">const</span> preview = document.<span class="function">getElementById</span>(<span class="string">'fotoPreview'</span>);
+            <span class="keyword">const</span> file = e.<span class="property">target</span>.<span class="property">files</span>[<span class="number">0</span>];
+            
+            <span class="keyword">if</span> (file) {
+                <span class="keyword">const</span> reader = <span class="keyword">new</span> FileReader();
+                reader.<span class="property">onload</span> = <span class="keyword">function</span>(e) {
+                    preview.<span class="property">innerHTML</span> = <span class="string">'&lt;img src="'</span> + e.<span class="property">target</span>.<span class="property">result</span> + <span class="string">'" alt="Preview"&gt;'</span>;
+                };
+                reader.<span class="function">readAsDataURL</span>(file);
+            } <span class="keyword">else</span> {
+                preview.<span class="property">innerHTML</span> = <span class="string">`
+                    &lt;div class="placeholder"&gt;
+                        &lt;i class="fas fa-camera"&gt;&lt;/i&gt;
+                        &lt;span&gt;Belum ada foto&lt;/span&gt;
+                    &lt;/div&gt;
+                `</span>;
+            }
+        });
+    <span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Fitur View Add:</strong>
+                <ul>
+                    <li><span class="badge green">✅</span> Form dengan <code>enctype="multipart/form-data"</code></li>
+                    <li><span class="badge green">✅</span> Input file foto dengan preview</li>
+                    <li><span class="badge green">✅</span> Validasi form di client-side (required)</li>
+                    <li><span class="badge green">✅</span> Flashdata untuk error</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 8: VIEW EDIT                                             -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab8">
+            <h2><span class="step-badge">8</span> View Edit</h2>
+            
+            <p>File: <code>application/views/dashboard/mhs/edit.php</code></p>
+            
+            <p>Form edit mahasiswa dengan upload foto dan preview.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- Bagian foto di edit.php --&gt;</span>
+
+<span class="comment">&lt;!-- Foto Upload --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-group"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;label&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-camera"</span><span class="tag">&gt;&lt;/i&gt;</span> Foto
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"form-text"</span> <span class="attribute">style</span>=<span class="value">"font-weight: normal; color: #888;"</span><span class="tag">&gt;</span>(Kosongkan jika tidak ingin mengubah)<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"file"</span> <span class="attribute">name</span>=<span class="value">"foto"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">accept</span>=<span class="value">"image/*"</span> <span class="attribute">id</span>=<span class="value">"fotoInput"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"form-text"</span><span class="tag">&gt;</span>Format: JPG, JPEG, PNG, GIF | Maks: 2MB<span class="tag">&lt;/div&gt;</span>
+    
+    <span class="comment">&lt;!-- Preview Foto --&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"foto-preview"</span> <span class="attribute">id</span>=<span class="value">"fotoPreview"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$mhs</span>-><span class="variable">foto</span>) && <span class="function">file_exists</span>(<span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$mhs</span>-><span class="variable">foto</span>)): <span class="tag">?&gt;</span>
+            <span class="tag">&lt;img</span> <span class="attribute">src</span>=<span class="value">"&lt;?= base_url('uploads/foto/' . $mhs-&gt;foto) ?&gt;"</span> <span class="attribute">alt</span>=<span class="value">"Foto"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"placeholder"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-camera"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                <span class="tag">&lt;span&gt;</span>Belum ada foto<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    <span class="comment">&lt;!-- Info foto saat ini --&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$mhs</span>-><span class="variable">foto</span>) && <span class="function">file_exists</span>(<span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$mhs</span>-><span class="variable">foto</span>)): <span class="tag">?&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"foto-current"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"label"</span><span class="tag">&gt;</span>📷 Foto saat ini:<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"filename"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$mhs</span>-><span class="variable">foto</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 9: VIEW INDEX                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab9">
+            <h2><span class="step-badge">9</span> View Index (Daftar Mahasiswa)</h2>
+            
+            <p>File: <code>application/views/dashboard/mhs/index.php</code></p>
+            
+            <p>Tampilan daftar mahasiswa dengan kolom foto.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== TABLE HEADER ===== --&gt;</span>
+<span class="tag">&lt;thead&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;th</span> <span class="attribute">style</span>=<span class="value">"width: 50px;"</span><span class="tag">&gt;</span>#<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th</span> <span class="attribute">style</span>=<span class="value">"width: 60px;"</span><span class="tag">&gt;</span>Foto<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>NIM<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>Nama<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>Prodi<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th&gt;</span>Jurusan<span class="tag">&lt;/th&gt;</span>
+        <span class="tag">&lt;th</span> <span class="attribute">style</span>=<span class="value">"text-align: center;"</span><span class="tag">&gt;</span>Aksi<span class="tag">&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+<span class="tag">&lt;/thead&gt;</span>
+
+<span class="comment">&lt;!-- ===== TABLE BODY ===== --&gt;</span>
+<span class="tag">&lt;tbody&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">if</span>(!<span class="function">empty</span>(<span class="variable">$mhs</span>)): <span class="tag">?&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="variable">$no</span> = <span class="number">1</span>; <span class="keyword">foreach</span>(<span class="variable">$mhs</span> <span class="keyword">as</span> <span class="variable">$row</span>): <span class="tag">?&gt;</span>
+        <span class="tag">&lt;tr&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="variable">$no</span>++ <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$row</span>-><span class="variable">foto</span>) && <span class="function">file_exists</span>(<span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$row</span>-><span class="variable">foto</span>)): <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;img</span> <span class="attribute">src</span>=<span class="value">"&lt;?= base_url('uploads/foto/' . $row-&gt;foto) ?&gt;"</span> 
+                         <span class="attribute">alt</span>=<span class="value">"Foto"</span> 
+                         <span class="attribute">style</span>=<span class="value">"width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #eef2f7;"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">style</span>=<span class="value">"width: 40px; height: 40px; border-radius: 50%; background: #e9ecef; display: flex; align-items: center; justify-content: center; color: #888;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                    <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+            <span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;strong&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">nim</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/strong&gt;&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">nama</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">prodi</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$row</span>-><span class="variable">jurusan</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/td&gt;</span>
+            <span class="tag">&lt;td</span> <span class="attribute">style</span>=<span class="value">"text-align: center;"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"action-buttons"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs/edit/'.$row-&gt;nim) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-edit"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-edit"</span><span class="tag">&gt;&lt;/i&gt;</span> Edit
+                    <span class="tag">&lt;/a&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs/confirm_delete/'.$row-&gt;nim) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn-delete"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-trash"</span><span class="tag">&gt;&lt;/i&gt;</span> Hapus
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;/tr&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endforeach</span>; <span class="tag">?&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+        <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;td</span> <span class="attribute">colspan</span>=<span class="value">"7"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"empty-state"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-inbox"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;h4&gt;</span>Belum ada data mahasiswa<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/td&gt;&lt;/tr&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+<span class="tag">&lt;/tbody&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 10: VIEW CONFIRM DELETE                                  -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab10">
+            <h2><span class="step-badge">10</span> View Confirm Delete</h2>
+            
+            <p>File: <code>application/views/dashboard/mhs/confirm_delete.php</code></p>
+            
+            <p>Halaman konfirmasi hapus dengan menampilkan foto mahasiswa.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- Bagian user info dengan foto --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"user-info"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$mhs</span>-><span class="variable">foto</span>) && <span class="function">file_exists</span>(<span class="variable">FCPATH</span> . <span class="string">'uploads/foto/'</span> . <span class="variable">$mhs</span>-><span class="variable">foto</span>)): <span class="tag">?&gt;</span>
+        <span class="tag">&lt;img</span> <span class="attribute">src</span>=<span class="value">"&lt;?= base_url('uploads/foto/' . $mhs-&gt;foto) ?&gt;"</span> 
+             <span class="attribute">alt</span>=<span class="value">"Foto"</span> 
+             <span class="attribute">style</span>=<span class="value">"width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid #eef2f7;"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>=<span class="value">"width: 80px; height: 80px; border-radius: 50%; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 32px; color: #aaa;"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user"</span><span class="tag">&gt;&lt;/i&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+    
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"nama"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$mhs</span>-><span class="variable">nama</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"nim"</span><span class="tag">&gt;</span>NIM: <span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$mhs</span>-><span class="variable">nim</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>=<span class="value">"margin-top: 5px; font-weight: normal; color: #555;"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$mhs</span>-><span class="variable">prodi</span>) <span class="tag">?&gt;</span> | <span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$mhs</span>-><span class="variable">jurusan</span>) <span class="tag">?&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 11: ALUR UPLOAD                                          -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab11">
+            <h2><span class="step-badge">11</span> Alur Upload Foto</h2>
+            
+            <div class="flow-chart">
+                <div class="step active">Tambah/Edit</div>
+                <span class="arrow">→</span>
+                <div class="step">Pilih File</div>
+                <span class="arrow">→</span>
+                <div class="step">Preview</div>
+                <span class="arrow">→</span>
+                <div class="step">Submit</div>
+                <span class="arrow">→</span>
+                <div class="step">Upload</div>
+                <span class="arrow">→</span>
+                <div class="step">Simpan</div>
+                <span class="arrow">→</span>
+                <div class="step">Selesai</div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Alur Upload:</strong>
+                <ul>
+                    <li><strong>1. Pilih File</strong> - User memilih file gambar melalui input file</li>
+                    <li><strong>2. Preview</strong> - Gambar ditampilkan secara real-time menggunakan JavaScript</li>
+                    <li><strong>3. Submit</strong> - User mengklik tombol Simpan/Update</li>
+                    <li><strong>4. Upload</strong> - File diupload ke server menggunakan library upload CI</li>
+                    <li><strong>5. Simpan</strong> - Nama file disimpan ke database, file disimpan di folder uploads/foto/</li>
+                    <li><strong>6. Selesai</strong> - Redirect ke halaman daftar mahasiswa</li>
+                </ul>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Validasi Upload:</strong>
+                <ul>
+                    <li>File harus berupa gambar (jpg, jpeg, png, gif)</li>
+                    <li>Ukuran file maksimal 2MB</li>
+                    <li>Nama file unik (NIM + timestamp)</li>
+                    <li>Folder upload dibuat otomatis jika belum ada</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Penanganan Error:</strong>
+                <ul>
+                    <li>Jika upload gagal → tampilkan flashdata error</li>
+                    <li>Jika folder tidak bisa ditulis → tampilkan error</li>
+                    <li>Jika file terlalu besar → tampilkan error</li>
+                    <li>Jika format tidak diizinkan → tampilkan error</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 12: KESIMPULAN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab12">
+            <h2><span class="step-badge">12</span> Kesimpulan</h2>
+            
+            <p>Berikut adalah ringkasan fitur Upload Foto Mahasiswa:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th style="background: #1a73e8; color: white;">Fitur</th>
+                        <th style="background: #1a73e8; color: white;">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">📷 Upload</span></td>
+                        <td>Upload foto saat tambah data</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">🔄 Update</span></td>
+                        <td>Update foto saat edit data (opsional)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">🖼️ Preview</span></td>
+                        <td>Preview foto sebelum upload</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">🗑️ Hapus</span></td>
+                        <td>Hapus foto saat data dihapus</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge purple">📁 Otomatis</span></td>
+                        <td>Folder upload dibuat otomatis</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">🛡️ Validasi</span></td>
+                        <td>Validasi tipe file dan ukuran</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box success">
+                <strong>🎉 Keuntungan Upload Foto:</strong>
+                <ul>
+                    <li>Data mahasiswa lebih informatif dengan foto</li>
+                    <li>Memudahkan identifikasi mahasiswa</li>
+                    <li>Meningkatkan visualisasi data</li>
+                    <li>Pengelolaan data lebih profesional</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Poin Penting:</strong>
+                <ul>
+                    <li>Folder <code>uploads/foto/</code> harus memiliki izin tulis</li>
+                    <li>Form harus menggunakan <code>enctype="multipart/form-data"</code></li>
+                    <li>Nama file dibuat unik dengan <code>NIM + timestamp</code></li>
+                    <li>File lama akan terhapus saat update/delete foto</li>
+                    <li>Gunakan <code>file_exists()</code> sebelum menampilkan foto</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>📁 File yang Dibuat/Diupdate:</strong>
+                <ul>
+                    <li><code>models/M_mhs.php</code> - Model (tidak berubah)</li>
+                    <li><code>controllers/Mhs.php</code> - Controller (tambah upload_foto)</li>
+                    <li><code>views/dashboard/mhs/add.php</code> - Form tambah (tambah input file + preview)</li>
+                    <li><code>views/dashboard/mhs/edit.php</code> - Form edit (tambah input file + preview + foto lama)</li>
+                    <li><code>views/dashboard/mhs/index.php</code> - Daftar (tambah kolom foto)</li>
+                    <li><code>views/dashboard/mhs/confirm_delete.php</code> - Konfirmasi (tambah foto)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FOOTER                                                        -->
+        <!-- ============================================================ -->
+        <div class="footer">
+            <p>
+                Jobsheet 4 - Upload Foto Mahasiswa CodeIgniter 3<br>
+                <strong>Implementasi Upload File pada CRUD Mahasiswa</strong>
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: #aaa;">
+                &copy; <?= date('Y') ?> - Dibuat dengan ❤️ untuk pembelajaran
+            </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DOWNLOAD BUTTON                                               -->
+        <!-- ============================================================ -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-download" onclick="window.print()">
+                📥 Download PDF
+            </button>
+            <p style="font-size: 13px; color: #888; margin-top: 8px;">
+                Klik tombol di atas untuk menyimpan sebagai PDF
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set tanggal otomatis
+        document.getElementById('date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+
+</body>
+</html>

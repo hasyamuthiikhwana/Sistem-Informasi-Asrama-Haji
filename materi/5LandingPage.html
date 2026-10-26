@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobsheet 3 - Landing Page CodeIgniter 3</title>
+    <style>
+        /* ============================================================ */
+        /* STYLES FOR JOBSHEET                                           */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        /* ========== HEADER ========== */
+        .jobsheet-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .jobsheet-header h1 {
+            color: #1a73e8;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .jobsheet-header .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .jobsheet-header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .jobsheet-header .meta span {
+            background: #f0f2f5;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* ========== TOC ========== */
+        .toc {
+            background: #f8f9fc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .toc h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc ul li {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .toc ul li a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h2 .step-badge {
+            background: #1a73e8;
+            color: white;
+            font-size: 14px;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.danger {
+            background: #fde8e8;
+            border-left-color: #e17055;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box ul {
+            margin: 8px 0 0 20px;
+        }
+
+        /* ========== CODE BLOCK ========== */
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-block .keyword { color: #0000ff; }
+        .code-block .string { color: #a31515; }
+        .code-block .comment { color: #008000; }
+        .code-block .function { color: #795e26; }
+        .code-block .variable { color: #001080; }
+        .code-block .operator { color: #333; }
+        .code-block .bracket { color: #333; }
+        .code-block .tag { color: #800000; }
+        .code-block .attribute { color: #ff0000; }
+        .code-block .value { color: #0000ff; }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fc;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== CLASS DIAGRAM ========== */
+        .class-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            margin: 15px 0;
+        }
+
+        .class-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .class-box .class-name {
+            background: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .class-box .class-section {
+            padding: 8px 20px;
+        }
+
+        .class-box .class-section .title {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .class-box .class-section .item {
+            font-size: 13px;
+            padding: 3px 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .class-box .class-section .item .type {
+            color: #888;
+        }
+
+        .class-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #888;
+            padding: 10px;
+        }
+
+        .class-arrow .arrow-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* ========== FILE STRUCTURE ========== */
+        .file-structure {
+            background: #f8f9fc;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .file-structure .folder { color: #795e26; font-weight: bold; }
+        .file-structure .file { color: #001080; }
+        .file-structure .highlight { color: #008000; }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.blue { background: #e3f0ff; color: #1a73e8; }
+        .badge.green { background: #e3f7f1; color: #00b894; }
+        .badge.orange { background: #fff3e0; color: #ff9800; }
+        .badge.red { background: #fde8e8; color: #e17055; }
+        .badge.purple { background: #f0e6ff; color: #764ba2; }
+
+        /* ========== FEATURE GRID ========== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-grid .item {
+            background: #f8f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-grid .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-grid .item .label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ========== FLOW CHART ========== */
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .flow-chart .step {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .flow-chart .step.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .flow-chart .arrow {
+            font-size: 20px;
+            color: #888;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ========== DOWNLOAD BUTTON ========== */
+        .btn-download {
+            display: inline-block;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 15px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            .btn-download {
+                display: none;
+            }
+            .code-block {
+                background: #ffffff !important;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .code-block .keyword { color: #0000ff; }
+            .code-block .string { color: #a31515; }
+            .code-block .comment { color: #008000; }
+            .code-block .function { color: #795e26; }
+            .code-block .variable { color: #001080; }
+            .code-block .tag { color: #800000; }
+            .code-block .attribute { color: #ff0000; }
+            .code-block .value { color: #0000ff; }
+            .file-structure {
+                background: #f8f9fc;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .file-structure .folder { color: #795e26; }
+            .file-structure .file { color: #001080; }
+            .file-structure .highlight { color: #008000; }
+            .toc ul {
+                columns: 1;
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-chart {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .jobsheet-header h1 {
+                font-size: 24px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            .jobsheet-header .meta {
+                gap: 10px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .flow-chart {
+                flex-direction: column;
+            }
+            .flow-chart .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="jobsheet">
+
+        <!-- ============================================================ -->
+        <!-- HEADER                                                        -->
+        <!-- ============================================================ -->
+        <div class="jobsheet-header">
+            <h1>📄 Jobsheet 3 - Landing Page</h1>
+            <p class="subtitle">Membangun Halaman Depan (Landing Page) dengan CodeIgniter 3</p>
+            <div class="meta">
+                <span>📅 Tanggal: <span id="date"></span></span>
+                <span>⏱ Durasi: 2 Jam</span>
+                <span>📚 Level: Pemula</span>
+                <span>👨‍💻 Framework: CodeIgniter 3</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DAFTAR ISI                                                   -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h3>📑 Daftar Isi</h3>
+            <ul>
+                <li><a href="#bab1">1. Pendahuluan</a></li>
+                <li><a href="#bab2">2. Class Diagram</a></li>
+                <li><a href="#bab3">3. Struktur Folder</a></li>
+                <li><a href="#bab4">4. Controller Landing</a></li>
+                <li><a href="#bab5">5. Layout Header & Footer</a></li>
+                <li><a href="#bab6">6. View Home</a></li>
+                <li><a href="#bab7">7. View Profil</a></li>
+                <li><a href="#bab8">8. View Berita</a></li>
+                <li><a href="#bab9">9. View Materi</a></li>
+                <li><a href="#bab10">10. View Hubungi Kami</a></li>
+                <li><a href="#bab11">11. Update Routes</a></li>
+                <li><a href="#bab12">12. Alur Aplikasi</a></li>
+                <li><a href="#bab13">13. Kesimpulan</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 1: PENDAHULUAN                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab1">
+            <h2><span class="step-badge">1</span> Pendahuluan</h2>
+            
+            <p>
+                Pada jobsheet ini, kita akan membuat <strong>Landing Page</strong> untuk aplikasi sebelum masuk ke halaman login. 
+                Landing page berfungsi sebagai halaman depan (homepage) yang memberikan informasi awal tentang aplikasi atau website.
+            </p>
+
+            <p>
+                Landing page akan memiliki menu navigasi: <strong>Home, Profil, Berita, Materi, Hubungi Kami, dan Login</strong>.
+                Menu <strong>Materi</strong> akan menampilkan daftar file HTML yang tersedia di folder <code>materi/</code>.
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Tujuan Pembelajaran:</strong>
+                <ul>
+                    <li>Memahami konsep Landing Page dalam aplikasi web</li>
+                    <li>Mampu membuat Controller untuk mengelola halaman statis</li>
+                    <li>Mampu membuat View dengan layout yang konsisten</li>
+                    <li>Mampu membuat navigasi menu</li>
+                    <li>Mampu menampilkan daftar file dari folder</li>
+                    <li>Mampu mengatur routing untuk halaman statis</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Prasyarat:</strong>
+                <ul>
+                    <li>CodeIgniter 3 sudah terinstall</li>
+                    <li>Sudah memahami dasar MVC CodeIgniter</li>
+                    <li>Web server (XAMPP/Laragon) berjalan</li>
+                    <li>Dasar HTML, CSS, dan PHP</li>
+                </ul>
+            </div>
+
+            <div class="feature-grid">
+                <div class="item">
+                    <span class="icon">🏠</span>
+                    <span class="label">Home</span>
+                </div>
+                <div class="item">
+                    <span class="icon">👤</span>
+                    <span class="label">Profil</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📰</span>
+                    <span class="label">Berita</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📚</span>
+                    <span class="label">Materi</span>
+                </div>
+                <div class="item">
+                    <span class="icon">📞</span>
+                    <span class="label">Hubungi Kami</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🔐</span>
+                    <span class="label">Login</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 2: CLASS DIAGRAM                                         -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab2">
+            <h2><span class="step-badge">2</span> Class Diagram</h2>
+            
+            <p>Berikut adalah class diagram untuk Landing Page:</p>
+
+            <div class="class-diagram-wrapper">
+                <!-- Controller Landing -->
+                <div class="class-box">
+                    <div class="class-name">Controller Landing</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $load : Library</div>
+                        <div class="item">- $session : Session</div>
+                        <div class="item">- $helper : File</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ index()</div>
+                        <div class="item">+ home()</div>
+                        <div class="item">+ profil()</div>
+                        <div class="item">+ berita()</div>
+                        <div class="item">+ materi()</div>
+                        <div class="item">+ hubungi()</div>
+                        <div class="item">+ login()</div>
+                    </div>
+                </div>
+
+                <div class="class-arrow">
+                    <span class="arrow-label">Menampilkan</span>
+                    ⬇️
+                </div>
+
+                <!-- View Landing -->
+                <div class="class-box">
+                    <div class="class-name">View Landing</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $data : Array</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Files +</div>
+                        <div class="item">+ landing/index.php</div>
+                        <div class="item">+ landing/profil.php</div>
+                        <div class="item">+ landing/berita.php</div>
+                        <div class="item">+ landing/materi.php</div>
+                        <div class="item">+ landing/hubungi.php</div>
+                        <div class="item">+ layout/landing/header.php</div>
+                        <div class="item">+ layout/landing/footer.php</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Keterangan Class Diagram:</strong>
+                <ul>
+                    <li><strong>Controller Landing</strong> - Mengatur semua halaman statis</li>
+                    <li><strong>View Landing</strong> - Template halaman dengan header dan footer</li>
+                    <li><strong>Relasi</strong> - Controller menampilkan View ke browser</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 3: STRUKTUR FOLDER                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab3">
+            <h2><span class="step-badge">3</span> Struktur Folder</h2>
+            
+            <p>Berikut adalah struktur folder untuk Landing Page:</p>
+
+            <div class="file-structure">
+<pre>
+ci_app/                              <span class="highlight">← Root Project</span>
+├── <span class="folder">materi/</span>                         <span class="highlight">← Folder Materi (di root)</span>
+│   ├── <span class="file">bab1.html</span>
+│   ├── <span class="file">bab2.html</span>
+│   ├── <span class="file">bab3.html</span>
+│   ├── <span class="file">bab4.html</span>
+│   └── <span class="file">bab5.html</span>
+├── application/
+│   ├── <span class="folder">controllers/</span>
+│   │   ├── Auth.php
+│   │   ├── Dashboard.php
+│   │   ├── Mhs.php
+│   │   └── <span class="file">Landing.php</span>       <span class="highlight">← Controller Landing</span>
+│   ├── <span class="folder">views/</span>
+│   │   ├── <span class="folder">landing/</span>          <span class="highlight">← Folder View Landing</span>
+│   │   │   ├── <span class="file">index.php</span>      <span class="highlight">← Halaman Home</span>
+│   │   │   ├── <span class="file">profil.php</span>    <span class="highlight">← Halaman Profil</span>
+│   │   │   ├── <span class="file">berita.php</span>    <span class="highlight">← Halaman Berita</span>
+│   │   │   ├── <span class="file">materi.php</span>    <span class="highlight">← Halaman Materi</span>
+│   │   │   └── <span class="file">hubungi.php</span>  <span class="highlight">← Halaman Hubungi Kami</span>
+│   │   └── <span class="folder">layout/</span>
+│   │       ├── <span class="file">header.php</span>          <span class="highlight">← Dashboard</span>
+│   │       ├── <span class="file">footer.php</span>          <span class="highlight">← Dashboard</span>
+│   │       ├── <span class="file">sidebar.php</span>         <span class="highlight">← Dashboard</span>
+│   │       └── <span class="folder">landing/</span>        <span class="highlight">← Folder Layout Landing</span>
+│   │           ├── <span class="file">header.php</span>  <span class="highlight">← Header Landing</span>
+│   │           └── <span class="file">footer.php</span>  <span class="highlight">← Footer Landing</span>
+│   └── <span class="folder">config/</span>
+│       └── <span class="file">routes.php</span>        <span class="highlight">← Update routing</span>
+└── .htaccess
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Catatan:</strong>
+                <ul>
+                    <li>Folder <code>materi/</code> berada di <strong>root project</strong> (satu level dengan folder <code>application/</code>)</li>
+                    <li>File materi berupa <strong>HTML</strong> yang bisa dibuka di browser</li>
+                    <li>Header/footer untuk <strong>Landing Page</strong> berada di <code>layout/landing/</code></li>
+                    <li>Header/footer untuk <strong>Dashboard</strong> tetap di <code>layout/</code> (dengan sidebar)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 4: CONTROLLER LANDING                                    -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab4">
+            <h2><span class="step-badge">4</span> Controller Landing</h2>
+            
+            <p>File: <code>application/controllers/Landing.php</code></p>
+            
+            <p>Controller ini mengatur semua halaman statis landing page.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">Landing</span> <span class="keyword">extends</span> <span class="function">CI_Controller</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'url'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'file'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman utama (Home)
+     * URL: /landing atau /
+     */</span>
+    <span class="keyword">public function</span> <span class="function">index</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Home'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'home'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/index'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman Home
+     * URL: /landing/home
+     */</span>
+    <span class="keyword">public function</span> <span class="function">home</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Home'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'home'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/index'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman Profil
+     * URL: /landing/profil
+     */</span>
+    <span class="keyword">public function</span> <span class="function">profil</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Profil'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'profil'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/profil'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman Berita
+     * URL: /landing/berita
+     */</span>
+    <span class="keyword">public function</span> <span class="function">berita</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Berita'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'berita'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/berita'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman Materi - Menampilkan daftar file HTML di folder materi/
+     * URL: /landing/materi
+     */</span>
+    <span class="keyword">public function</span> <span class="function">materi</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Materi'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'materi'</span>;
+        
+        <span class="comment">// Ambil daftar file HTML dari folder materi</span>
+        <span class="variable">$folder_path</span> = <span class="variable">FCPATH</span> . <span class="string">'materi/'</span>;
+        <span class="variable">$files</span> = <span class="function">array</span>();
+        
+        <span class="keyword">if</span> (<span class="function">is_dir</span>(<span class="variable">$folder_path</span>)) {
+            <span class="variable">$dir</span> = <span class="function">scandir</span>(<span class="variable">$folder_path</span>);
+            <span class="keyword">foreach</span> (<span class="variable">$dir</span> <span class="keyword">as</span> <span class="variable">$file</span>) {
+                <span class="keyword">if</span> (<span class="variable">$file</span> != <span class="string">'.'</span> && <span class="variable">$file</span> != <span class="string">'..'</span>) {
+                    <span class="comment">// Ambil hanya file HTML</span>
+                    <span class="variable">$ext</span> = <span class="function">strtolower</span>(<span class="function">pathinfo</span>(<span class="variable">$file</span>, <span class="variable">PATHINFO_EXTENSION</span>));
+                    <span class="keyword">if</span> (<span class="variable">$ext</span> == <span class="string">'html'</span> || <span class="variable">$ext</span> == <span class="string">'htm'</span>) {
+                        <span class="variable">$files</span>[] = <span class="variable">$file</span>;
+                    }
+                }
+            }
+        }
+        
+        <span class="variable">$data</span>[<span class="string">'files'</span>] = <span class="variable">$files</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/materi'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Halaman Hubungi Kami
+     * URL: /landing/hubungi
+     */</span>
+    <span class="keyword">public function</span> <span class="function">hubungi</span>() {
+        <span class="variable">$data</span>[<span class="string">'title'</span>] = <span class="string">'Hubungi Kami'</span>;
+        <span class="variable">$data</span>[<span class="string">'active'</span>] = <span class="string">'hubungi'</span>;
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/header'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'landing/hubungi'</span>, <span class="variable">$data</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'layout/landing/footer'</span>);
+    }
+    
+    <span class="comment">/**
+     * Redirect ke halaman login
+     * URL: /landing/login
+     */</span>
+    <span class="keyword">public function</span> <span class="function">login</span>() {
+        <span class="function">redirect</span>(<span class="string">'auth'</span>);
+    }
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Controller:</strong>
+                <ul>
+                    <li><code>index()</code> - Halaman utama (Home)</li>
+                    <li><code>home()</code> - Halaman Home (alternatif)</li>
+                    <li><code>profil()</code> - Halaman Profil</li>
+                    <li><code>berita()</code> - Halaman Berita</li>
+                    <li><code>materi()</code> - Halaman Materi (menampilkan daftar file HTML)</li>
+                    <li><code>hubungi()</code> - Halaman Hubungi Kami</li>
+                    <li><code>login()</code> - Redirect ke halaman login</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 5: LAYOUT HEADER & FOOTER                                -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab5">
+            <h2><span class="step-badge">5</span> Layout Header & Footer</h2>
+
+            <div class="info-box">
+                <strong>📌 Catatan:</strong>
+                <ul>
+                    <li>Header dan Footer untuk Landing Page berada di <code>views/layout/landing/</code></li>
+                    <li>Menu yang tersedia: Home, Profil, Berita, Materi, Hubungi Kami, Login</li>
+                </ul>
+            </div>
+
+            <!-- ===== HEADER ===== -->
+            <h3>5.1 Layout Header Landing</h3>
+            <p>File: <code>application/views/layout/landing/header.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>MyApp - <span class="tag">&lt;?=</span> <span class="variable">$title</span> <span class="tag">?&gt;</span><span class="tag">&lt;/title&gt;</span>
+    
+    <span class="tag">&lt;link</span> <span class="attribute">href</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">href</span>=<span class="value">"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"</span><span class="tag">&gt;</span>
+    
+    <span class="tag">&lt;style&gt;</span>
+        <span class="selector">body</span> { <span class="attribute">padding-top</span>: <span class="value">70px</span>; <span class="attribute">font-family</span>: <span class="value">'Segoe UI', Tahoma, Geneva, Verdana, sans-serif</span>; }
+        <span class="selector">.navbar-brand</span> { <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">font-size</span>: <span class="value">24px</span>; }
+        <span class="selector">.navbar-brand span</span> { <span class="attribute">color</span>: <span class="value">#4e73df</span>; }
+        <span class="selector">.nav-link.active</span> { <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">color</span>: <span class="value">#4e73df !important</span>; }
+        <span class="selector">.btn-login</span> { <span class="attribute">background</span>: <span class="value">#4e73df</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">border-radius</span>: <span class="value">20px</span>; <span class="attribute">padding</span>: <span class="value">8px 25px</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; }
+        <span class="selector">.btn-login:hover</span> { <span class="attribute">background</span>: <span class="value">#224abe</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 4px 15px rgba(78,115,223,0.3)</span>; }
+        <span class="selector">.hero-section</span> { <span class="attribute">background</span>: <span class="value">linear-gradient(135deg, #1a73e8 0%, #4e73df 100%)</span>; <span class="attribute">color</span>: <span class="value">white</span>; <span class="attribute">padding</span>: <span class="value">80px 0</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">margin-bottom</span>: <span class="value">30px</span>; }
+        <span class="selector">.hero-section h1</span> { <span class="attribute">font-size</span>: <span class="value">48px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; }
+        <span class="selector">.hero-section .btn-light</span> { <span class="attribute">border-radius</span>: <span class="value">20px</span>; <span class="attribute">padding</span>: <span class="value">10px 30px</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; }
+        <span class="selector">.hero-section .btn-light:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-2px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 4px 15px rgba(255,255,255,0.3)</span>; }
+        <span class="selector">.footer</span> { <span class="attribute">background</span>: <span class="value">#1a1a2e</span>; <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.7)</span>; <span class="attribute">padding</span>: <span class="value">30px 0</span>; <span class="attribute">margin-top</span>: <span class="value">40px</span>; }
+        <span class="selector">.footer a</span> { <span class="attribute">color</span>: <span class="value">rgba(255,255,255,0.7)</span>; <span class="attribute">text-decoration</span>: <span class="value">none</span>; <span class="attribute">transition</span>: <span class="value">color 0.3s</span>; }
+        <span class="selector">.footer a:hover</span> { <span class="attribute">color</span>: <span class="value">white</span>; }
+        <span class="selector">.feature-icon</span> { <span class="attribute">font-size</span>: <span class="value">40px</span>; <span class="attribute">color</span>: <span class="value">#4e73df</span>; <span class="attribute">margin-bottom</span>: <span class="value">15px</span>; }
+        <span class="selector">.card-feature</span> { <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">padding</span>: <span class="value">20px</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">height</span>: <span class="value">100%</span>; <span class="attribute">background</span>: <span class="value">white</span>; }
+        <span class="selector">.card-feature:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-5px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 8px 25px rgba(0,0,0,0.1)</span>; }
+        <span class="selector">.page-title</span> { <span class="attribute">font-size</span>: <span class="value">32px</span>; <span class="attribute">font-weight</span>: <span class="value">700</span>; <span class="attribute">margin-bottom</span>: <span class="value">20px</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; }
+        <span class="selector">.content-section</span> { <span class="attribute">padding</span>: <span class="value">30px 0</span>; }
+        <span class="selector">.berita-card</span> { <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">overflow</span>: <span class="value">hidden</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; <span class="attribute">height</span>: <span class="value">100%</span>; <span class="attribute">border</span>: <span class="value">none</span>; }
+        <span class="selector">.berita-card:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-5px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 8px 25px rgba(0,0,0,0.1)</span>; }
+        <span class="selector">.berita-card .card-body</span> { <span class="attribute">padding</span>: <span class="value">20px</span>; }
+        <span class="selector">.berita-card .card-date</span> { <span class="attribute">font-size</span>: <span class="value">12px</span>; <span class="attribute">color</span>: <span class="value">#888</span>; }
+        <span class="selector">.berita-card .card-title</span> { <span class="attribute">font-size</span>: <span class="value">18px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; }
+        <span class="selector">.materi-card</span> { <span class="attribute">border</span>: <span class="value">none</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">transition</span>: <span class="value">all 0.3s</span>; <span class="attribute">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.06)</span>; <span class="attribute">height</span>: <span class="value">100%</span>; <span class="attribute">text-align</span>: <span class="value">center</span>; <span class="attribute">padding</span>: <span class="value">10px</span>; }
+        <span class="selector">.materi-card:hover</span> { <span class="attribute">transform</span>: <span class="value">translateY(-5px)</span>; <span class="attribute">box-shadow</span>: <span class="value">0 8px 25px rgba(0,0,0,0.1)</span>; }
+        <span class="selector">.materi-card .materi-icon</span> { <span class="attribute">font-size</span>: <span class="value">48px</span>; <span class="attribute">margin-bottom</span>: <span class="value">10px</span>; }
+        <span class="selector">.materi-card .card-title</span> { <span class="attribute">font-size</span>: <span class="value">14px</span>; <span class="attribute">font-weight</span>: <span class="value">600</span>; <span class="attribute">color</span>: <span class="value">#1a1a2e</span>; }
+        <span class="selector">.contact-info</span> { <span class="attribute">padding</span>: <span class="value">20px</span>; <span class="attribute">border-radius</span>: <span class="value">12px</span>; <span class="attribute">background</span>: <span class="value">#f8f9fc</span>; <span class="attribute">margin-bottom</span>: <span class="value">15px</span>; }
+        <span class="selector">.contact-info i</span> { <span class="attribute">font-size</span>: <span class="value">24px</span>; <span class="attribute">color</span>: <span class="value">#4e73df</span>; <span class="attribute">margin-right</span>: <span class="value">15px</span>; }
+        <span class="selector">.empty-state .icon</span> { <span class="attribute">color</span>: <span class="value">#ddd</span>; }
+        <span class="selector">@media (max-width: 768px)</span> { <span class="selector">.hero-section h1</span> { <span class="attribute">font-size</span>: <span class="value">32px</span>; } }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+<span class="comment">&lt;!-- ===== NAVBAR ===== --&gt;</span>
+<span class="tag">&lt;nav</span> <span class="attribute">class</span>=<span class="value">"navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"container"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"navbar-brand"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing') ?&gt;"</span><span class="tag">&gt;</span>
+            📊 My<span>App</span>
+        <span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attribute">class</span>=<span class="value">"navbar-toggler"</span> <span class="attribute">type</span>=<span class="value">"button"</span> <span class="attribute">data-bs-toggle</span>=<span class="value">"collapse"</span> <span class="attribute">data-bs-target</span>=<span class="value">"#navbarNav"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"navbar-toggler-icon"</span><span class="tag">&gt;&lt;/span&gt;</span>
+        <span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"collapse navbar-collapse"</span> <span class="attribute">id</span>=<span class="value">"navbarNav"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;ul</span> <span class="attribute">class</span>=<span class="value">"navbar-nav ms-auto"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"nav-link &lt;?= ($active == 'home') ? 'active' : '' ?&gt;"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/home') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-home"</span><span class="tag">&gt;&lt;/i&gt;</span> Home
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"nav-link &lt;?= ($active == 'profil') ? 'active' : '' ?&gt;"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/profil') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-building"</span><span class="tag">&gt;&lt;/i&gt;</span> Profil
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"nav-link &lt;?= ($active == 'berita') ? 'active' : '' ?&gt;"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/berita') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-newspaper"</span><span class="tag">&gt;&lt;/i&gt;</span> Berita
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+                <span class="comment">&lt;!-- ===== MENU MATERI ===== --&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"nav-link &lt;?= ($active == 'materi') ? 'active' : '' ?&gt;"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/materi') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-book"</span><span class="tag">&gt;&lt;/i&gt;</span> Materi
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"nav-link &lt;?= ($active == 'hubungi') ? 'active' : '' ?&gt;"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/hubungi') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-envelope"</span><span class="tag">&gt;&lt;/i&gt;</span> Hubungi Kami
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li</span> <span class="attribute">class</span>=<span class="value">"nav-item ms-2"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">class</span>=<span class="value">"btn btn-login"</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/login') ?&gt;"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-sign-in-alt"</span><span class="tag">&gt;&lt;/i&gt;</span> Login
+                    <span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+
+<span class="comment">&lt;!-- ===== MAIN CONTENT ===== --&gt;</span>
+<span class="tag">&lt;main</span> <span class="attribute">class</span>=<span class="value">"container"</span><span class="tag">&gt;</span>
+</pre>
+            </div>
+
+            <!-- ===== FOOTER ===== -->
+            <h3>5.2 Layout Footer Landing</h3>
+            <p>File: <code>application/views/layout/landing/footer.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="tag">&lt;/main&gt;</span>
+
+<span class="comment">&lt;!-- ===== FOOTER ===== --&gt;</span>
+<span class="tag">&lt;footer</span> <span class="attribute">class</span>=<span class="value">"footer"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"container"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"text-white"</span><span class="tag">&gt;</span>📊 MyApp<span class="tag">&lt;/h5&gt;</span>
+                <span class="tag">&lt;p&gt;</span>Aplikasi Manajemen Data Mahasiswa dan Users.<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"text-white"</span><span class="tag">&gt;</span>Menu<span class="tag">&lt;/h5&gt;</span>
+                <span class="tag">&lt;ul</span> <span class="attribute">class</span>=<span class="value">"list-unstyled"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/home') ?&gt;"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/profil') ?&gt;"</span><span class="tag">&gt;</span>Profil<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/berita') ?&gt;"</span><span class="tag">&gt;</span>Berita<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/materi') ?&gt;"</span><span class="tag">&gt;</span>Materi<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/hubungi') ?&gt;"</span><span class="tag">&gt;</span>Hubungi Kami<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="tag">&lt;/ul&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"text-white"</span><span class="tag">&gt;</span>Kontak<span class="tag">&lt;/h5&gt;</span>
+                <span class="tag">&lt;p&gt;</span>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-envelope"</span><span class="tag">&gt;&lt;/i&gt;</span> info@myapp.com<br>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-phone"</span><span class="tag">&gt;&lt;/i&gt;</span> +62 812 3456 7890
+                <span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;hr</span> <span class="attribute">style</span>=<span class="value">"border-color: rgba(255,255,255,0.1)"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"text-center"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"mb-0"</span><span class="tag">&gt;</span>&copy; <span class="tag">&lt;?=</span> <span class="function">date</span>(<span class="string">'Y'</span>) <span class="tag">?&gt;</span> MyApp. All Rights Reserved.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/footer&gt;</span>
+
+<span class="tag">&lt;script</span> <span class="attribute">src</span>=<span class="value">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 6: VIEW HOME                                             -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab6">
+            <h2><span class="step-badge">6</span> View Home</h2>
+            
+            <p>File: <code>application/views/landing/index.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== HERO SECTION ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"hero-section text-center"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"container"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;h1</span> <span class="attribute">class</span>=<span class="value">"display-4 fw-bold"</span><span class="tag">&gt;</span>Selamat Datang di MyApp<span class="tag">&lt;/h1&gt;</span>
+        <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"lead fs-4"</span><span class="tag">&gt;</span>
+            Aplikasi Manajemen Data Mahasiswa dan Users yang mudah digunakan.
+        <span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('landing/login') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn btn-light btn-lg mt-3"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-sign-in-alt"</span><span class="tag">&gt;&lt;/i&gt;</span> Login Sekarang
+        <span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- ===== FEATURES ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row g-4"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-feature"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"feature-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-users"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+            <span class="tag">&lt;h5&gt;</span>Manajemen Users<span class="tag">&lt;/h5&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"text-muted"</span><span class="tag">&gt;</span>Kelola data users dengan mudah.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-feature"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"feature-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-user-graduate"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+            <span class="tag">&lt;h5&gt;</span>Manajemen Mahasiswa<span class="tag">&lt;/h5&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"text-muted"</span><span class="tag">&gt;</span>Kelola data mahasiswa dengan efisien.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-feature"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"feature-icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-shield-alt"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;</span>
+            <span class="tag">&lt;h5&gt;</span>Keamanan Terjamin<span class="tag">&lt;/h5&gt;</span>
+            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"text-muted"</span><span class="tag">&gt;</span>Sistem login yang aman dan terpercaya.<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 7: VIEW PROFIL                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab7">
+            <h2><span class="step-badge">7</span> View Profil</h2>
+            
+            <p>File: <code>application/views/landing/profil.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== PAGE TITLE ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-section"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h1</span> <span class="attribute">class</span>=<span class="value">"page-title"</span><span class="tag">&gt;</span>👤 Profil MyApp<span class="tag">&lt;/h1&gt;</span>
+    
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-lg-8"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h4&gt;</span>Tentang MyApp<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;p&gt;</span>
+                MyApp adalah aplikasi manajemen data yang dibangun dengan CodeIgniter 3. 
+                Aplikasi ini dirancang untuk memudahkan pengelolaan data users dan mahasiswa 
+                dengan antarmuka yang sederhana dan intuitif.
+            <span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;h4&gt;</span>Visi<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;p&gt;</span>
+                Menjadi aplikasi manajemen data yang handal dan mudah digunakan oleh berbagai kalangan.
+            <span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;h4&gt;</span>Misi<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;ul&gt;</span>
+                <span class="tag">&lt;li&gt;</span>Menyediakan platform manajemen data yang efisien<span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;</span>Memudahkan pengelolaan data users dan mahasiswa<span class="tag">&lt;/li&gt;</span>
+                <span class="tag">&lt;li&gt;</span>Memberikan pengalaman pengguna yang terbaik<span class="tag">&lt;/li&gt;</span>
+            <span class="tag">&lt;/ul&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-lg-4"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card p-4"</span> <span class="attribute">style</span>=<span class="value">"border-radius: 12px; background: #f8f9fc;"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;h5&gt;</span>📊 Informasi Aplikasi<span class="tag">&lt;/h5&gt;</span>
+                <span class="tag">&lt;hr&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Nama Aplikasi<span class="tag">&lt;/strong&gt;</span><br>MyApp<span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Framework<span class="tag">&lt;/strong&gt;</span><br>CodeIgniter 3<span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Versi<span class="tag">&lt;/strong&gt;</span><br>1.0.0<span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;p&gt;</span><span class="tag">&lt;strong&gt;</span>Dibuat<span class="tag">&lt;/strong&gt;</span><br><span class="tag">&lt;?=</span> <span class="function">date</span>(<span class="string">'Y'</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 8: VIEW BERITA                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab8">
+            <h2><span class="step-badge">8</span> View Berita</h2>
+            
+            <p>File: <code>application/views/landing/berita.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== PAGE TITLE ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-section"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h1</span> <span class="attribute">class</span>=<span class="value">"page-title"</span><span class="tag">&gt;</span>📰 Berita Terbaru<span class="tag">&lt;/h1&gt;</span>
+    
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row g-4"</span><span class="tag">&gt;</span>
+        <span class="comment">&lt;!-- Berita 1 --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"berita-card card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-body"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-date"</span><span class="tag">&gt;</span>15 Juni 2026<span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"card-title"</span><span class="tag">&gt;</span>Peluncuran MyApp Versi 2.0<span class="tag">&lt;/h5&gt;</span>
+                    <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"card-text text-muted"</span><span class="tag">&gt;</span>
+                        MyApp telah merilis versi terbaru dengan fitur-fitur yang lebih canggih dan antarmuka yang lebih modern.
+                    <span class="tag">&lt;/p&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">class</span>=<span class="value">"btn btn-sm btn-primary"</span><span class="tag">&gt;</span>Baca Selengkapnya<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="comment">&lt;!-- Berita 2 --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"berita-card card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-body"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-date"</span><span class="tag">&gt;</span>10 Juni 2026<span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"card-title"</span><span class="tag">&gt;</span>Sistem Keamanan Ditingkatkan<span class="tag">&lt;/h5&gt;</span>
+                    <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"card-text text-muted"</span><span class="tag">&gt;</span>
+                        Kami telah meningkatkan sistem keamanan untuk melindungi data pengguna dari ancaman cyber.
+                    <span class="tag">&lt;/p&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">class</span>=<span class="value">"btn btn-sm btn-primary"</span><span class="tag">&gt;</span>Baca Selengkapnya<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="comment">&lt;!-- Berita 3 --&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-4"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"berita-card card"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-body"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-date"</span><span class="tag">&gt;</span>5 Juni 2026<span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;h5</span> <span class="attribute">class</span>=<span class="value">"card-title"</span><span class="tag">&gt;</span>Fitur Baru: Export Data<span class="tag">&lt;/h5&gt;</span>
+                    <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"card-text text-muted"</span><span class="tag">&gt;</span>
+                        Kini Anda dapat mengekspor data users dan mahasiswa dalam format CSV dan PDF.
+                    <span class="tag">&lt;/p&gt;</span>
+                    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"#"</span> <span class="attribute">class</span>=<span class="value">"btn btn-sm btn-primary"</span><span class="tag">&gt;</span>Baca Selengkapnya<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 9: VIEW MATERI                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab9">
+            <h2><span class="step-badge">9</span> View Materi</h2>
+            
+            <p>File: <code>application/views/landing/materi.php</code></p>
+            
+            <p>Halaman ini menampilkan daftar file HTML yang tersedia di folder <code>materi/</code>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== PAGE TITLE ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-section"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h1</span> <span class="attribute">class</span>=<span class="value">"page-title"</span><span class="tag">&gt;</span>📚 Daftar Materi<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"text-muted"</span><span class="tag">&gt;</span>Klik pada file untuk membuka materi.<span class="tag">&lt;/p&gt;</span>
+    
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row g-4 mt-2"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$files</span>)): <span class="tag">?&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">foreach</span> (<span class="variable">$files</span> <span class="keyword">as</span> <span class="variable">$file</span>): <span class="tag">?&gt;</span>
+                <span class="tag">&lt;?php</span> 
+                    <span class="comment">// Ambil nama file tanpa ekstensi untuk judul</span>
+                    <span class="variable">$title</span> = <span class="function">pathinfo</span>(<span class="variable">$file</span>, <span class="variable">PATHINFO_FILENAME</span>);
+                    <span class="variable">$title</span> = <span class="function">str_replace</span>([<span class="string">'_'</span>, <span class="string">'-'</span>], <span class="string">' '</span>, <span class="variable">$title</span>);
+                    <span class="variable">$title</span> = <span class="function">ucwords</span>(<span class="variable">$title</span>);
+                <span class="tag">?&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-md-3 col-sm-6"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card materi-card"</span><span class="tag">&gt;</span>
+                        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"card-body text-center"</span><span class="tag">&gt;</span>
+                            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"materi-icon"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-file-code text-primary"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                            <span class="tag">&lt;/div&gt;</span>
+                            <span class="tag">&lt;h6</span> <span class="attribute">class</span>=<span class="value">"card-title"</span><span class="tag">&gt;</span><span class="tag">&lt;?=</span> <span class="function">htmlspecialchars</span>(<span class="variable">$title</span>) <span class="tag">?&gt;</span><span class="tag">&lt;/h6&gt;</span>
+                            <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"card-text text-muted small"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-html5 text-warning"</span><span class="tag">&gt;&lt;/i&gt;</span> HTML
+                            <span class="tag">&lt;/p&gt;</span>
+                            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('materi/' . $file) ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"btn btn-sm btn-primary"</span> <span class="attribute">target</span>=<span class="value">"_blank"</span><span class="tag">&gt;</span>
+                                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-eye"</span><span class="tag">&gt;&lt;/i&gt;</span> Buka
+                            <span class="tag">&lt;/a&gt;</span>
+                        <span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;?php</span> <span class="keyword">endforeach</span>; <span class="tag">?&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">else</span>: <span class="tag">?&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-12 text-center py-5"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"empty-state"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"icon"</span><span class="tag">&gt;</span><span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-folder-open fa-4x text-muted"</span><span class="tag">&gt;&lt;/i&gt;&lt;/span&gt;<span class="tag">&lt;/div&gt;</span>
+                    <span class="tag">&lt;h4</span> <span class="attribute">class</span>=<span class="value">"mt-3"</span><span class="tag">&gt;</span>Belum Ada Materi<span class="tag">&lt;/h4&gt;</span>
+                    <span class="tag">&lt;p</span> <span class="attribute">class</span>=<span class="value">"text-muted"</span><span class="tag">&gt;</span>Belum ada file materi HTML yang tersedia.<span class="tag">&lt;/p&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;?php</span> <span class="keyword">endif</span>; <span class="tag">?&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan View Materi:</strong>
+                <ul>
+                    <li>Mengambil daftar file dari folder <code>materi/</code> di root project</li>
+                    <li>Hanya menampilkan file dengan ekstensi <code>.html</code> atau <code>.htm</code></li>
+                    <li>Judul file diambil dari nama file (tanpa ekstensi)</li>
+                    <li>Setiap file ditampilkan dalam bentuk card dengan icon HTML</li>
+                    <li>Tombol "Buka" akan membuka file di tab baru</li>
+                    <li>Jika folder kosong, tampilkan pesan "Belum Ada Materi"</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 10: VIEW HUBUNGI KAMI                                    -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab10">
+            <h2><span class="step-badge">10</span> View Hubungi Kami</h2>
+            
+            <p>File: <code>application/views/landing/hubungi.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- ===== PAGE TITLE ===== --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"content-section"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h1</span> <span class="attribute">class</span>=<span class="value">"page-title"</span><span class="tag">&gt;</span>📞 Hubungi Kami<span class="tag">&lt;/h1&gt;</span>
+    
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"row"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-lg-6"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h4&gt;</span>Kirim Pesan<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;form&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"mb-3"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label</span> <span class="attribute">class</span>=<span class="value">"form-label"</span><span class="tag">&gt;</span>Nama<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan nama"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"mb-3"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label</span> <span class="attribute">class</span>=<span class="value">"form-label"</span><span class="tag">&gt;</span>Email<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="value">"email"</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">placeholder</span>=<span class="value">"Masukkan email"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"mb-3"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;label</span> <span class="attribute">class</span>=<span class="value">"form-label"</span><span class="tag">&gt;</span>Pesan<span class="tag">&lt;/label&gt;</span>
+                    <span class="tag">&lt;textarea</span> <span class="attribute">class</span>=<span class="value">"form-control"</span> <span class="attribute">rows</span>=<span class="value">"5"</span> <span class="attribute">placeholder</span>=<span class="value">"Tulis pesan..."</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="value">"submit"</span> <span class="attribute">class</span>=<span class="value">"btn btn-primary"</span><span class="tag">&gt;</span>
+                    <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-paper-plane"</span><span class="tag">&gt;&lt;/i&gt;</span> Kirim Pesan
+                <span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;/form&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"col-lg-6"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h4&gt;</span>Informasi Kontak<span class="tag">&lt;/h4&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"contact-info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-map-marker-alt"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                <span class="tag">&lt;strong&gt;</span>Alamat:<span class="tag">&lt;/strong&gt;</span><br>
+                Jl. Teknologi No. 123, Kota Bandung, Jawa Barat
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"contact-info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-envelope"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                <span class="tag">&lt;strong&gt;</span>Email:<span class="tag">&lt;/strong&gt;</span><br>
+                info@myapp.com
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"contact-info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-phone"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                <span class="tag">&lt;strong&gt;</span>Telepon:<span class="tag">&lt;/strong&gt;</span><br>
+                +62 812 3456 7890
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="value">"contact-info"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;i</span> <span class="attribute">class</span>=<span class="value">"fas fa-clock"</span><span class="tag">&gt;&lt;/i&gt;</span>
+                <span class="tag">&lt;strong&gt;</span>Jam Kerja:<span class="tag">&lt;/strong&gt;</span><br>
+                Senin - Jumat: 08:00 - 17:00 WIB
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 11: UPDATE ROUTES                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab11">
+            <h2><span class="step-badge">11</span> Update Routes</h2>
+            
+            <p>File: <code>application/config/routes.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">// ============================================================</span>
+<span class="comment">// LANDING PAGE</span>
+<span class="comment">// ============================================================</span>
+<span class="variable">$route</span>[<span class="string">'default_controller'</span>] = <span class="string">'Landing'</span>;
+<span class="variable">$route</span>[<span class="string">'landing'</span>] = <span class="string">'Landing/index'</span>;
+<span class="variable">$route</span>[<span class="string">'landing/home'</span>] = <span class="string">'Landing/home'</span>;
+<span class="variable">$route</span>[<span class="string">'landing/profil'</span>] = <span class="string">'Landing/profil'</span>;
+<span class="variable">$route</span>[<span class="string">'landing/berita'</span>] = <span class="string">'Landing/berita'</span>;
+<span class="variable">$route</span>[<span class="string">'landing/materi'</span>] = <span class="string">'Landing/materi'</span>;   <span class="comment">// Route Materi</span>
+<span class="variable">$route</span>[<span class="string">'landing/hubungi'</span>] = <span class="string">'Landing/hubungi'</span>;
+<span class="variable">$route</span>[<span class="string">'landing/login'</span>] = <span class="string">'Landing/login'</span>;
+
+<span class="comment">// ============================================================</span>
+<span class="comment">// AUTH</span>
+<span class="comment">// ============================================================</span>
+<span class="variable">$route</span>[<span class="string">'auth'</span>] = <span class="string">'Auth/index'</span>;
+<span class="variable">$route</span>[<span class="string">'auth/login_action'</span>] = <span class="string">'Auth/login_action'</span>;
+<span class="variable">$route</span>[<span class="string">'auth/logout'</span>] = <span class="string">'Auth/logout'</span>;
+
+<span class="comment">// ============================================================</span>
+<span class="comment">// DASHBOARD - USERS</span>
+<span class="comment">// ============================================================</span>
+<span class="variable">$route</span>[<span class="string">'dashboard'</span>] = <span class="string">'Dashboard/index'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/add'</span>] = <span class="string">'Dashboard/add'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/save'</span>] = <span class="string">'Dashboard/save'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/edit/(:num)'</span>] = <span class="string">'Dashboard/edit/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/update/(:num)'</span>] = <span class="string">'Dashboard/update/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/confirm_delete/(:num)'</span>] = <span class="string">'Dashboard/confirm_delete/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'dashboard/delete/(:num)'</span>] = <span class="string">'Dashboard/delete/$1'</span>;
+
+<span class="comment">// ============================================================</span>
+<span class="comment">// MAHASISWA</span>
+<span class="comment">// ============================================================</span>
+<span class="variable">$route</span>[<span class="string">'mhs'</span>] = <span class="string">'Mhs/index'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/add'</span>] = <span class="string">'Mhs/add'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/save'</span>] = <span class="string">'Mhs/save'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/edit/(:any)'</span>] = <span class="string">'Mhs/edit/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/update/(:any)'</span>] = <span class="string">'Mhs/update/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/confirm_delete/(:any)'</span>] = <span class="string">'Mhs/confirm_delete/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/delete/(:any)'</span>] = <span class="string">'Mhs/delete/$1'</span>;
+
+<span class="variable">$route</span>[<span class="string">'404_override'</span>] = <span class="string">''</span>;
+<span class="variable">$route</span>[<span class="string">'translate_uri_dashes'</span>] = <span class="keyword">FALSE</span>;
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Perubahan Routes:</strong>
+                <ul>
+                    <li><code>default_controller</code> diubah menjadi <strong>Landing</strong></li>
+                    <li>Menambahkan route untuk semua halaman landing termasuk <strong>materi</strong></li>
+                    <li>Route <code>/</code> akan langsung menuju halaman landing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 12: ALUR APLIKASI                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab12">
+            <h2><span class="step-badge">12</span> Alur Aplikasi</h2>
+            
+            <p>Berikut adalah alur navigasi aplikasi:</p>
+
+            <div class="flow-chart">
+                <div class="step active">Landing Page</div>
+                <span class="arrow">→</span>
+                <div class="step">Home</div>
+                <span class="arrow">→</span>
+                <div class="step">Profil</div>
+                <span class="arrow">→</span>
+                <div class="step">Berita</div>
+                <span class="arrow">→</span>
+                <div class="step">Materi</div>
+                <span class="arrow">→</span>
+                <div class="step">Hubungi Kami</div>
+                <span class="arrow">→</span>
+                <div class="step">Login</div>
+                <span class="arrow">→</span>
+                <div class="step">Dashboard</div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Alur:</strong>
+                <ul>
+                    <li>User membuka aplikasi → langsung menuju <strong>Landing Page</strong> (Home)</li>
+                    <li>User dapat mengakses menu: Home, Profil, Berita, Materi, Hubungi Kami</li>
+                    <li>Menu <strong>Materi</strong> menampilkan daftar file HTML di folder <code>materi/</code></li>
+                    <li>User klik <strong>Login</strong> → diarahkan ke halaman login</li>
+                    <li>Setelah login berhasil → masuk ke <strong>Dashboard</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 13: KESIMPULAN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab13">
+            <h2><span class="step-badge">13</span> Kesimpulan</h2>
+            
+            <p>Berikut adalah ringkasan fitur Landing Page yang telah dibuat:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th style="background: #1a73e8; color: white;">Halaman</th>
+                        <th style="background: #1a73e8; color: white;">URL</th>
+                        <th style="background: #1a73e8; color: white;">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">🏠 Home</span></td>
+                        <td><code>/</code> atau <code>/landing</code></td>
+                        <td>Halaman utama landing page</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">👤 Profil</span></td>
+                        <td><code>/landing/profil</code></td>
+                        <td>Informasi tentang aplikasi</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">📰 Berita</span></td>
+                        <td><code>/landing/berita</code></td>
+                        <td>Daftar berita terbaru</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">📚 Materi</span></td>
+                        <td><code>/landing/materi</code></td>
+                        <td>Daftar file materi HTML</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">📞 Hubungi Kami</span></td>
+                        <td><code>/landing/hubungi</code></td>
+                        <td>Form kontak dan informasi</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">🔐 Login</span></td>
+                        <td><code>/landing/login</code></td>
+                        <td>Redirect ke halaman login</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box success">
+                <strong>🎉 Keuntungan Landing Page:</strong>
+                <ul>
+                    <li>Memberikan kesan profesional pada aplikasi</li>
+                    <li>Menampilkan informasi sebelum user login</li>
+                    <li>Memudahkan user memahami fungsi aplikasi</li>
+                    <li>Meningkatkan user experience (UX)</li>
+                    <li>Menyediakan akses materi pembelajaran</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Poin Penting:</strong>
+                <ul>
+                    <li>Landing page adalah halaman pertama yang dilihat user</li>
+                    <li>Gunakan layout yang konsisten (header, footer)</li>
+                    <li>Navigasi harus jelas dan mudah digunakan</li>
+                    <li>Pastikan semua link menu berfungsi dengan baik</li>
+                    <li>Header/footer landing terpisah dari dashboard</li>
+                    <li>Folder <code>materi/</code> berada di root project</li>
+                    <li>File materi harus berupa <code>.html</code> atau <code>.htm</code></li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>📁 Struktur File yang Dibuat:</strong>
+                <ul>
+                    <li><code>controllers/Landing.php</code> - Controller</li>
+                    <li><code>views/layout/landing/header.php</code> - Header Landing</li>
+                    <li><code>views/layout/landing/footer.php</code> - Footer Landing</li>
+                    <li><code>views/landing/index.php</code> - Halaman Home</li>
+                    <li><code>views/landing/profil.php</code> - Halaman Profil</li>
+                    <li><code>views/landing/berita.php</code> - Halaman Berita</li>
+                    <li><code>views/landing/materi.php</code> - Halaman Materi</li>
+                    <li><code>views/landing/hubungi.php</code> - Halaman Hubungi Kami</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FOOTER                                                        -->
+        <!-- ============================================================ -->
+        <div class="footer">
+            <p>
+                Jobsheet 3 - Landing Page CodeIgniter 3<br>
+                <strong>Membangun Halaman Depan Aplikasi dengan Menu Materi</strong>
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: #aaa;">
+                &copy; <?= date('Y') ?> - Dibuat dengan ❤️ untuk pembelajaran
+            </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DOWNLOAD BUTTON                                               -->
+        <!-- ============================================================ -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-download" onclick="window.print()">
+                📥 Download PDF
+            </button>
+            <p style="font-size: 13px; color: #888; margin-top: 8px;">
+                Klik tombol di atas untuk menyimpan sebagai PDF
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set tanggal otomatis
+        document.getElementById('date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+
+</body>
+</html>

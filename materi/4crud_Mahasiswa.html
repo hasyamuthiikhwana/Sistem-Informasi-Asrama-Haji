@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobsheet 2 - CRUD Mahasiswa CodeIgniter 3</title>
+    <style>
+        /* ============================================================ */
+        /* STYLES FOR JOBSHEET                                           */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 30px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        /* ========== HEADER ========== */
+        .jobsheet-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #1a73e8;
+            margin-bottom: 30px;
+        }
+
+        .jobsheet-header h1 {
+            color: #1a73e8;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .jobsheet-header .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .jobsheet-header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .jobsheet-header .meta span {
+            background: #f0f2f5;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        /* ========== TOC ========== */
+        .toc {
+            background: #f8f9fc;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .toc h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc ul li {
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .toc ul li a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h2 .step-badge {
+            background: #1a73e8;
+            color: white;
+            font-size: 14px;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #1a73e8;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-left-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .info-box.danger {
+            background: #fde8e8;
+            border-left-color: #e17055;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box ul {
+            margin: 8px 0 0 20px;
+        }
+
+        /* ========== CODE BLOCK ========== */
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-block .keyword { color: #0000ff; }
+        .code-block .string { color: #a31515; }
+        .code-block .comment { color: #008000; }
+        .code-block .function { color: #795e26; }
+        .code-block .variable { color: #001080; }
+        .code-block .operator { color: #333; }
+        .code-block .bracket { color: #333; }
+        .code-block .tag { color: #800000; }
+        .code-block .attribute { color: #ff0000; }
+        .code-block .value { color: #0000ff; }
+
+        /* ========== TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fc;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== CLASS DIAGRAM ========== */
+        .class-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            margin: 15px 0;
+        }
+
+        .class-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .class-box .class-name {
+            background: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .class-box .class-section {
+            padding: 8px 20px;
+        }
+
+        .class-box .class-section .title {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .class-box .class-section .item {
+            font-size: 13px;
+            padding: 3px 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .class-box .class-section .item .type {
+            color: #888;
+        }
+
+        .class-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #888;
+            padding: 10px;
+        }
+
+        .class-arrow .arrow-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* ========== FILE STRUCTURE ========== */
+        .file-structure {
+            background: #f8f9fc;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 2;
+            margin: 15px 0;
+        }
+
+        .file-structure .folder { color: #795e26; font-weight: bold; }
+        .file-structure .file { color: #001080; }
+        .file-structure .highlight { color: #008000; }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.blue { background: #e3f0ff; color: #1a73e8; }
+        .badge.green { background: #e3f7f1; color: #00b894; }
+        .badge.orange { background: #fff3e0; color: #ff9800; }
+        .badge.red { background: #fde8e8; color: #e17055; }
+        .badge.purple { background: #f0e6ff; color: #764ba2; }
+
+        /* ========== FEATURE GRID ========== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .feature-grid .item {
+            background: #f8f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-grid .item .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-grid .item .label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* ========== DOWNLOAD BUTTON ========== */
+        .btn-download {
+            display: inline-block;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 15px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            .btn-download {
+                display: none;
+            }
+            .code-block {
+                background: #ffffff !important;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .code-block .keyword { color: #0000ff; }
+            .code-block .string { color: #a31515; }
+            .code-block .comment { color: #008000; }
+            .code-block .function { color: #795e26; }
+            .code-block .variable { color: #001080; }
+            .code-block .tag { color: #800000; }
+            .code-block .attribute { color: #ff0000; }
+            .code-block .value { color: #0000ff; }
+            .file-structure {
+                background: #f8f9fc;
+                border: 1px solid #ddd;
+                color: #333;
+            }
+            .file-structure .folder { color: #795e26; }
+            .file-structure .file { color: #001080; }
+            .file-structure .highlight { color: #008000; }
+            .toc ul {
+                columns: 1;
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .jobsheet-header h1 {
+                font-size: 24px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .code-block {
+                font-size: 12px;
+                padding: 15px;
+            }
+            .jobsheet-header .meta {
+                gap: 10px;
+            }
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .class-diagram-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .class-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="jobsheet">
+
+        <!-- ============================================================ -->
+        <!-- HEADER                                                        -->
+        <!-- ============================================================ -->
+        <div class="jobsheet-header">
+            <h1>📄 Jobsheet 2 - CRUD Mahasiswa</h1>
+            <p class="subtitle">Implementasi CRUD Mahasiswa dengan CodeIgniter 3</p>
+            <div class="meta">
+                <span>📅 Tanggal: <span id="date"></span></span>
+                <span>⏱ Durasi: 3 Jam</span>
+                <span>📚 Level: Pemula - Menengah</span>
+                <span>👨‍💻 Framework: CodeIgniter 3</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DAFTAR ISI                                                   -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h3>📑 Daftar Isi</h3>
+            <ul>
+                <li><a href="#bab1">1. Pendahuluan</a></li>
+                <li><a href="#bab2">2. Class Diagram</a></li>
+                <li><a href="#bab3">3. Struktur Folder</a></li>
+                <li><a href="#bab4">4. Database</a></li>
+                <li><a href="#bab5">5. Model M_mhs</a></li>
+                <li><a href="#bab6">6. Controller Mhs</a></li>
+                <li><a href="#bab7">7. View Index</a></li>
+                <li><a href="#bab8">8. View Add</a></li>
+                <li><a href="#bab9">9. View Edit</a></li>
+                <li><a href="#bab10">10. View Confirm Delete</a></li>
+                <li><a href="#bab11">11. Update Sidebar</a></li>
+                <li><a href="#bab12">12. Update Routes</a></li>
+                <li><a href="#bab13">13. Kesimpulan</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 1: PENDAHULUAN                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab1">
+            <h2><span class="step-badge">1</span> Pendahuluan</h2>
+            
+            <p>
+                Pada jobsheet ini, kita akan membuat <strong>CRUD (Create, Read, Update, Delete)</strong> untuk 
+                data mahasiswa menggunakan CodeIgniter 3. Data mahasiswa akan disimpan dalam tabel <code>mhs</code> 
+                dengan field <strong>NIM sebagai Primary Key</strong>, Nama, Prodi, dan Jurusan.
+            </p>
+            
+            <div class="info-box">
+                <strong>🎯 Tujuan Pembelajaran:</strong>
+                <ul>
+                    <li>Memahami konsep CRUD dalam CodeIgniter 3</li>
+                    <li>Mampu membuat Model untuk tabel mhs</li>
+                    <li>Mampu membuat Controller untuk CRUD mahasiswa</li>
+                    <li>Mampu membuat View untuk menampilkan data mahasiswa</li>
+                    <li>Mampu menangani error dan validasi form</li>
+                    <li>Mampu mengintegrasikan menu baru ke sidebar</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Prasyarat:</strong>
+                <ul>
+                    <li>CodeIgniter 3 sudah terinstall</li>
+                    <li>Sudah menyelesaikan Jobsheet 1 (CRUD Users)</li>
+                    <li>Database MySQL sudah siap</li>
+                    <li>Web server (XAMPP/Laragon) berjalan</li>
+                    <li>Dasar PHP dan SQL</li>
+                </ul>
+            </div>
+
+            <div class="feature-grid">
+                <div class="item">
+                    <span class="icon">📋</span>
+                    <span class="label">List Mahasiswa</span>
+                </div>
+                <div class="item">
+                    <span class="icon">➕</span>
+                    <span class="label">Tambah</span>
+                </div>
+                <div class="item">
+                    <span class="icon">✏️</span>
+                    <span class="label">Edit</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🗑️</span>
+                    <span class="label">Hapus</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🔍</span>
+                    <span class="label">Pencarian</span>
+                </div>
+                <div class="item">
+                    <span class="icon">🛡️</span>
+                    <span class="label">Validasi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 2: CLASS DIAGRAM                                         -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab2">
+            <h2><span class="step-badge">2</span> Class Diagram</h2>
+            
+            <p>Berikut adalah class diagram untuk CRUD Mahasiswa:</p>
+
+            <div class="class-diagram-wrapper">
+                <!-- Controller Mhs -->
+                <div class="class-box">
+                    <div class="class-name">Controller Mhs</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $load : Library</div>
+                        <div class="item">- $db : Database</div>
+                        <div class="item">- $session : Session</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ index()</div>
+                        <div class="item">+ add()</div>
+                        <div class="item">+ save()</div>
+                        <div class="item">+ edit($nim)</div>
+                        <div class="item">+ update($nim)</div>
+                        <div class="item">+ confirm_delete($nim)</div>
+                        <div class="item">+ delete($nim)</div>
+                    </div>
+                </div>
+
+                <div class="class-arrow">
+                    <span class="arrow-label">Menggunakan</span>
+                    ⬇️
+                </div>
+
+                <!-- Model M_mhs -->
+                <div class="class-box">
+                    <div class="class-name">Model M_mhs</div>
+                    <div class="class-section">
+                        <div class="title">- Attributes -</div>
+                        <div class="item">- $db : Database</div>
+                        <div class="item">- $table : string = 'mhs'</div>
+                    </div>
+                    <div class="class-section">
+                        <div class="title">+ Methods +</div>
+                        <div class="item">+ __construct()</div>
+                        <div class="item">+ get_all_mhs()</div>
+                        <div class="item">+ search_mhs($keyword)</div>
+                        <div class="item">+ get_mhs_by_nim($nim)</div>
+                        <div class="item">+ insert_mhs($data)</div>
+                        <div class="item">+ update_mhs($nim, $data)</div>
+                        <div class="item">+ delete_mhs($nim)</div>
+                        <div class="item">+ nim_exists($nim)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Keterangan Class Diagram:</strong>
+                <ul>
+                    <li><strong>Controller Mhs</strong> - Mengatur logika aplikasi dan menghubungkan Model dengan View</li>
+                    <li><strong>Model M_mhs</strong> - Mengelola interaksi dengan database tabel mhs</li>
+                    <li><strong>Relasi</strong> - Controller menggunakan Model untuk operasi database</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 3: STRUKTUR FOLDER                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab3">
+            <h2><span class="step-badge">3</span> Struktur Folder</h2>
+            
+            <p>Berikut adalah struktur folder yang akan kita buat:</p>
+
+            <div class="file-structure">
+<pre>
+application/
+├── controllers/
+│   ├── Auth.php
+│   ├── Dashboard.php
+│   └── <span class="file">Mhs.php</span>          <span class="highlight">← Controller Mahasiswa</span>
+├── models/
+│   ├── M_user.php
+│   └── <span class="file">M_mhs.php</span>        <span class="highlight">← Model Mahasiswa</span>
+├── views/
+│   ├── login.php
+│   ├── layout/
+│   │   └── sidebar.php
+│   ├── dashboard/
+│   │   ├── admin.php
+│   │   ├── add_user.php
+│   │   ├── edit_user.php
+│   │   ├── confirm_delete.php
+│   │   └── <span class="file">mhs/</span>          <span class="highlight">← Folder View Mahasiswa</span>
+│   │       ├── <span class="file">index.php</span>
+│   │       ├── <span class="file">add.php</span>
+│   │       ├── <span class="file">edit.php</span>
+│   │       └── <span class="file">confirm_delete.php</span>
+└── config/
+    ├── config.php
+    ├── autoload.php
+    ├── database.php
+    └── <span class="file">routes.php</span>        <span class="highlight">← Tambah route baru</span>
+</pre>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 4: DATABASE                                              -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab4">
+            <h2><span class="step-badge">4</span> Database</h2>
+            
+            <p>Buat tabel <code>mhs</code> dengan struktur berikut:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr><th>Field</th><th>Type</th><th>Key</th><th>Keterangan</th></tr>
+                    <tr><td><strong>nim</strong></td><td>VARCHAR(20)</td><td><strong>PRIMARY KEY</strong></td><td>NIM Mahasiswa</td></tr>
+                    <tr><td>nama</td><td>VARCHAR(100)</td><td>-</td><td>Nama Mahasiswa</td></tr>
+                    <tr><td>prodi</td><td>VARCHAR(50)</td><td>-</td><td>Program Studi</td></tr>
+                    <tr><td>jurusan</td><td>VARCHAR(50)</td><td>-</td><td>Jurusan</td></tr>
+                </table>
+            </div>
+
+            <div class="code-block">
+                <span class="lang-label">SQL</span>
+<pre><span class="keyword">CREATE TABLE</span> mhs (
+    nim <span class="keyword">VARCHAR</span>(20) <span class="keyword">PRIMARY KEY</span>,
+    nama <span class="keyword">VARCHAR</span>(100) <span class="keyword">NOT NULL</span>,
+    prodi <span class="keyword">VARCHAR</span>(50) <span class="keyword">NOT NULL</span>,
+    jurusan <span class="keyword">VARCHAR</span>(50) <span class="keyword">NOT NULL</span>
+);
+
+<span class="comment">-- Contoh data</span>
+<span class="keyword">INSERT INTO</span> mhs (nim, nama, prodi, jurusan) <span class="keyword">VALUES</span> 
+(<span class="string">'2024001'</span>, <span class="string">'Andi Pratama'</span>, <span class="string">'Teknik Multimedia'</span>, <span class="string">'Manajemen Informatika'</span>),
+(<span class="string">'2024002'</span>, <span class="string">'Budi Santoso'</span>, <span class="string">'Manajemen Informatika'</span>, <span class="string">'Manajemen Informatika'</span>),
+(<span class="string">'2024003'</span>, <span class="string">'Citra Dewi'</span>, <span class="string">'Agrobisnis'</span>, <span class="string">'Agrobisnis'</span>),
+(<span class="string">'2024004'</span>, <span class="string">'Dedi Firmansyah'</span>, <span class="string">'Teknik Mesin'</span>, <span class="string">'Mesin'</span>),
+(<span class="string">'2024005'</span>, <span class="string">'Eka Sari'</span>, <span class="string">'Teknik Multimedia'</span>, <span class="string">'Manajemen Informatika'</span>);
+</pre>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Catatan:</strong>
+                <ul>
+                    <li>NIM sebagai <strong>Primary Key</strong> (tidak boleh duplikat)</li>
+                    <li>Semua field wajib diisi (<strong>NOT NULL</strong>)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 5: MODEL M_MHS                                           -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab5">
+            <h2><span class="step-badge">5</span> Model M_mhs</h2>
+            
+            <p>File: <code>application/models/M_mhs.php</code></p>
+            
+            <p>Model ini menangani semua operasi database untuk tabel <code>mhs</code>.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">M_mhs</span> <span class="keyword">extends</span> <span class="function">CI_Model</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">database</span>();
+    }
+    
+    <span class="comment">/**
+     * Get all mahasiswa
+     * @return array List of mahasiswa
+     */</span>
+    <span class="keyword">public function</span> <span class="function">get_all_mhs</span>() {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">/**
+     * Search mahasiswa by nim, nama, prodi, or jurusan
+     * @param string $keyword Keyword pencarian
+     * @return array List of mahasiswa
+     */</span>
+    <span class="keyword">public function</span> <span class="function">search_mhs</span>(<span class="variable">$keyword</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">group_start</span>();
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">like</span>(<span class="string">'nim'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'nama'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'prodi'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">or_like</span>(<span class="string">'jurusan'</span>, <span class="variable">$keyword</span>);
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">group_end</span>();
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>)-><span class="function">result</span>();
+    }
+    
+    <span class="comment">/**
+     * Get mahasiswa by NIM
+     * @param string $nim NIM Mahasiswa
+     * @return object Mahasiswa data
+     */</span>
+    <span class="keyword">public function</span> <span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get_where</span>(<span class="string">'mhs'</span>, [<span class="string">'nim'</span> => <span class="variable">$nim</span>])-><span class="function">row</span>();
+    }
+    
+    <span class="comment">/**
+     * Insert new mahasiswa
+     * @param array $data Mahasiswa data
+     * @return boolean
+     */</span>
+    <span class="keyword">public function</span> <span class="function">insert_mhs</span>(<span class="variable">$data</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">insert</span>(<span class="string">'mhs'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">/**
+     * Update mahasiswa
+     * @param string $nim NIM Mahasiswa
+     * @param array $data Mahasiswa data
+     * @return boolean
+     */</span>
+    <span class="keyword">public function</span> <span class="function">update_mhs</span>(<span class="variable">$nim</span>, <span class="variable">$data</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">update</span>(<span class="string">'mhs'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">/**
+     * Delete mahasiswa
+     * @param string $nim NIM Mahasiswa
+     * @return boolean
+     */</span>
+    <span class="keyword">public function</span> <span class="function">delete_mhs</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">delete</span>(<span class="string">'mhs'</span>);
+    }
+    
+    <span class="comment">/**
+     * Check if NIM exists
+     * @param string $nim
+     * @return boolean     */</span>
+    <span class="keyword">public function</span> <span class="function">nim_exists</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">where</span>(<span class="string">'nim'</span>, <span class="variable">$nim</span>);
+        <span class="variable">$query</span> = <span class="variable">$this</span>-><span class="variable">db</span>-><span class="function">get</span>(<span class="string">'mhs'</span>);
+        <span class="keyword">return</span> <span class="variable">$query</span>-><span class="function">num_rows</span>() > <span class="number">0</span>;
+    }
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Daftar Method:</strong>
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>Method</th><th>Fungsi</th></tr>
+                        <tr><td><code>get_all_mhs()</code></td><td>Mengambil semua data mahasiswa</td></tr>
+                        <tr><td><code>search_mhs($keyword)</code></td><td>Mencari mahasiswa berdasarkan keyword</td></tr>
+                        <tr><td><code>get_mhs_by_nim($nim)</code></td><td>Mengambil mahasiswa berdasarkan NIM</td></tr>
+                        <tr><td><code>insert_mhs($data)</code></td><td>Menambah data mahasiswa baru</td></tr>
+                        <tr><td><code>update_mhs($nim, $data)</code></td><td>Mengupdate data mahasiswa</td></tr>
+                        <tr><td><code>delete_mhs($nim)</code></td><td>Menghapus data mahasiswa</td></tr>
+                        <tr><td><code>nim_exists($nim)</code></td><td>Mengecek apakah NIM sudah terdaftar</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 6: CONTROLLER MHS                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab6">
+            <h2><span class="step-badge">6</span> Controller Mhs</h2>
+            
+            <p>File: <code>application/controllers/Mhs.php</code></p>
+            
+            <p>Controller ini menangani semua operasi CRUD Mahasiswa.</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">class</span> <span class="function">Mhs</span> <span class="keyword">extends</span> <span class="function">CI_Controller</span> {
+    
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="keyword">parent</span>::<span class="function">__construct</span>();
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">model</span>(<span class="string">'M_mhs'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">helper</span>(<span class="string">'form'</span>);
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">library</span>(<span class="string">'form_validation'</span>);
+        
+        <span class="keyword">if</span>(!<span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">userdata</span>(<span class="string">'logged_in'</span>)) {
+            <span class="function">redirect</span>(<span class="string">'auth'</span>);
+        }
+    }
+    
+    <span class="comment">// ===== READ =====</span>
+    <span class="keyword">public function</span> <span class="function">index</span>() {
+        <span class="variable">$keyword</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">get</span>(<span class="string">'search'</span>);
+        
+        <span class="keyword">if</span> (!<span class="function">empty</span>(<span class="variable">$keyword</span>)) {
+            <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">search_mhs</span>(<span class="variable">$keyword</span>);
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="variable">$keyword</span>;
+        } <span class="keyword">else</span> {
+            <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_all_mhs</span>();
+            <span class="variable">$data</span>[<span class="string">'keyword'</span>] = <span class="string">''</span>;
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/index'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="comment">// ===== CREATE =====</span>
+    <span class="keyword">public function</span> <span class="function">add</span>() {
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/add'</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">save</span>() {
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nim'</span>, <span class="string">'NIM'</span>, <span class="string">'required|min_length[5]|max_length[20]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nama'</span>, <span class="string">'Nama'</span>, <span class="string">'required|min_length[3]|max_length[100]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'prodi'</span>, <span class="string">'Prodi'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'jurusan'</span>, <span class="string">'Jurusan'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'required'</span>, <span class="string">'{field} harus diisi!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'min_length'</span>, <span class="string">'{field} minimal {param} karakter!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'max_length'</span>, <span class="string">'{field} maksimal {param} karakter!'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'mhs/add'</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$nim</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nim'</span>);
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">nim_exists</span>(<span class="variable">$nim</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'NIM '</span> . <span class="variable">$nim</span> . <span class="string">' sudah terdaftar!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs/add'</span>);
+            }
+            
+            <span class="variable">$data</span> = [
+                <span class="string">'nim'</span> => <span class="variable">$nim</span>,
+                <span class="string">'nama'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nama'</span>),
+                <span class="string">'prodi'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'prodi'</span>),
+                <span class="string">'jurusan'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'jurusan'</span>)
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">insert_mhs</span>(<span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil ditambahkan!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== UPDATE =====</span>
+    <span class="keyword">public function</span> <span class="function">edit</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'mhs'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/edit'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$mhs</span> = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$mhs</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nim'</span>, <span class="string">'NIM'</span>, <span class="string">'required|min_length[5]|max_length[20]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'nama'</span>, <span class="string">'Nama'</span>, <span class="string">'required|min_length[3]|max_length[100]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'prodi'</span>, <span class="string">'Prodi'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_rules</span>(<span class="string">'jurusan'</span>, <span class="string">'Jurusan'</span>, <span class="string">'required|min_length[3]|max_length[50]'</span>);
+        
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'required'</span>, <span class="string">'{field} harus diisi!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'min_length'</span>, <span class="string">'{field} minimal {param} karakter!'</span>);
+        <span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">set_message</span>(<span class="string">'max_length'</span>, <span class="string">'{field} maksimal {param} karakter!'</span>);
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">form_validation</span>-><span class="function">run</span>() == <span class="keyword">FALSE</span>) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="function">validation_errors</span>());
+            <span class="function">redirect</span>(<span class="string">'mhs/edit/'</span> . <span class="variable">$nim</span>);
+        } <span class="keyword">else</span> {
+            <span class="variable">$new_nim</span> = <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nim'</span>);
+            
+            <span class="keyword">if</span> (<span class="variable">$new_nim</span> != <span class="variable">$nim</span> && <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">nim_exists</span>(<span class="variable">$new_nim</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'NIM '</span> . <span class="variable">$new_nim</span> . <span class="string">' sudah terdaftar!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs/edit/'</span> . <span class="variable">$nim</span>);
+            }
+            
+            <span class="variable">$data</span> = [
+                <span class="string">'nim'</span> => <span class="variable">$new_nim</span>,
+                <span class="string">'nama'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'nama'</span>),
+                <span class="string">'prodi'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'prodi'</span>),
+                <span class="string">'jurusan'</span> => <span class="variable">$this</span>-><span class="variable">input</span>-><span class="function">post</span>(<span class="string">'jurusan'</span>)
+            ];
+            
+            <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">update_mhs</span>(<span class="variable">$nim</span>, <span class="variable">$data</span>)) {
+                <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil diupdate!'</span>);
+                <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// ===== DELETE =====</span>
+    <span class="keyword">public function</span> <span class="function">confirm_delete</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$data</span>[<span class="string">'mhs'</span>] = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$data</span>[<span class="string">'mhs'</span>])) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="variable">$this</span>-><span class="function">load</span>-><span class="function">view</span>(<span class="string">'dashboard/mhs/confirm_delete'</span>, <span class="variable">$data</span>);
+    }
+    
+    <span class="keyword">public function</span> <span class="function">delete</span>(<span class="variable">$nim</span>) {
+        <span class="variable">$mhs</span> = <span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">get_mhs_by_nim</span>(<span class="variable">$nim</span>);
+        
+        <span class="keyword">if</span> (<span class="function">empty</span>(<span class="variable">$mhs</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'error'</span>, <span class="string">'Data mahasiswa tidak ditemukan!'</span>);
+            <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+        }
+        
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="variable">M_mhs</span>-><span class="function">delete_mhs</span>(<span class="variable">$nim</span>)) {
+            <span class="variable">$this</span>-><span class="variable">session</span>-><span class="function">set_flashdata</span>(<span class="string">'success'</span>, <span class="string">'Data mahasiswa berhasil dihapus!'</span>);
+        }
+        
+        <span class="function">redirect</span>(<span class="string">'mhs'</span>);
+    }
+}
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Fitur Controller:</strong>
+                <ul>
+                    <li><span class="badge green">✅</span> Validasi form dengan Form Validation Library</li>
+                    <li><span class="badge green">✅</span> Pengecekan NIM duplikat</li>
+                    <li><span class="badge green">✅</span> Flashdata untuk pesan sukses/error</li>
+                    <li><span class="badge green">✅</span> Pencarian data</li>
+                    <li><span class="badge green">✅</span> Konfirmasi hapus</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 7-10: VIEWS (Singkat)                                    -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab7">
+            <h2><span class="step-badge">7-10</span> Views</h2>
+            
+            <div class="info-box">
+                <strong>📌 File Views yang Dibuat:</strong>
+                <ul>
+                    <li><code>views/dashboard/mhs/index.php</code> - Daftar Mahasiswa</li>
+                    <li><code>views/dashboard/mhs/add.php</code> - Form Tambah</li>
+                    <li><code>views/dashboard/mhs/edit.php</code> - Form Edit</li>
+                    <li><code>views/dashboard/mhs/confirm_delete.php</code> - Konfirmasi Hapus</li>
+                </ul>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Fitur View Index:</strong>
+                <ul>
+                    <li>Menampilkan tabel data mahasiswa</li>
+                    <li>Form pencarian dengan method GET</li>
+                    <li>Tombol Tambah, Edit, Hapus</li>
+                    <li>Flashdata untuk notifikasi</li>
+                    <li>Informasi hasil pencarian</li>
+                </ul>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Fitur View Add & Edit:</strong>
+                <ul>
+                    <li>Form dengan validasi</li>
+                    <li>Info user yang sedang diedit (untuk edit)</li>
+                    <li>Tombol Simpan/Update dan Batal</li>
+                    <li>Pesan error validasi</li>
+                </ul>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ Fitur View Confirm Delete:</strong>
+                <ul>
+                    <li>Tampilan konfirmasi sebelum hapus</li>
+                    <li>Informasi data yang akan dihapus</li>
+                    <li>Tombol "Ya, Hapus!" dan "Batal"</li>
+                    <li><strong>Tanpa JavaScript</strong> - menggunakan link biasa</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 11: UPDATE SIDEBAR                                       -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab11">
+            <h2><span class="step-badge">11</span> Update Sidebar</h2>
+            
+            <p>File: <code>application/views/layout/sidebar.php</code></p>
+            
+            <p>Tambahkan menu Mahasiswa di bawah menu Users:</p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">&lt;!-- Menu Mahasiswa --&gt;</span>
+<span class="tag">&lt;li&gt;</span>
+    <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="value">"&lt;?= base_url('mhs') ?&gt;"</span> <span class="attribute">class</span>=<span class="value">"&lt;?= (uri_string() == 'mhs' || $this-&gt;uri-&gt;segment(1) == 'mhs') ? 'active' : '' ?&gt;"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"nav-icon"</span><span class="tag">&gt;</span>🎓<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attribute">class</span>=<span class="value">"nav-text"</span><span class="tag">&gt;</span>Mahasiswa<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/li&gt;</span>
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan:</strong>
+                <ul>
+                    <li>Menu akan aktif (<code>active</code>) jika berada di halaman <code>/mhs</code></li>
+                    <li>Menggunakan <code>uri_string()</code> dan <code>$this->uri->segment(1)</code> untuk deteksi halaman</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 12: UPDATE ROUTES                                        -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab12">
+            <h2><span class="step-badge">12</span> Update Routes</h2>
+            
+            <p>File: <code>application/config/routes.php</code></p>
+
+            <div class="code-block">
+                <span class="lang-label">PHP</span>
+<pre><span class="comment">// Route untuk Mhs</span>
+<span class="variable">$route</span>[<span class="string">'mhs'</span>] = <span class="string">'Mhs/index'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/add'</span>] = <span class="string">'Mhs/add'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/save'</span>] = <span class="string">'Mhs/save'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/edit/(:any)'</span>] = <span class="string">'Mhs/edit/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/update/(:any)'</span>] = <span class="string">'Mhs/update/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/confirm_delete/(:any)'</span>] = <span class="string">'Mhs/confirm_delete/$1'</span>;
+<span class="variable">$route</span>[<span class="string">'mhs/delete/(:any)'</span>] = <span class="string">'Mhs/delete/$1'</span>;
+</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>📌 Penjelasan Route:</strong>
+                <ul>
+                    <li><code>(:any)</code> - Menerima parameter apapun (NIM)</li>
+                    <li><code>$1</code> - Mengganti parameter pertama</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- BAB 13: KESIMPULAN                                            -->
+        <!-- ============================================================ -->
+        <div class="section" id="bab13">
+            <h2><span class="step-badge">13</span> Kesimpulan</h2>
+            
+            <p>Berikut adalah ringkasan fitur CRUD Mahasiswa yang telah dibuat:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <tr>
+                        <th style="background: #1a73e8; color: white;">Fitur</th>
+                        <th style="background: #1a73e8; color: white;">URL</th>
+                        <th style="background: #1a73e8; color: white;">Method</th>
+                        <th style="background: #1a73e8; color: white;">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">📋 List</span></td>
+                        <td><code>/mhs</code></td>
+                        <td>GET</td>
+                        <td>Menampilkan semua mahasiswa</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge blue">🔍 Search</span></td>
+                        <td><code>/mhs?search=keyword</code></td>
+                        <td>GET</td>
+                        <td>Mencari mahasiswa</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">➕ Tambah</span></td>
+                        <td><code>/mhs/add</code></td>
+                        <td>GET</td>
+                        <td>Form tambah mahasiswa</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge green">💾 Simpan</span></td>
+                        <td><code>/mhs/save</code></td>
+                        <td>POST</td>
+                        <td>Proses simpan data</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">✏️ Edit</span></td>
+                        <td><code>/mhs/edit/{nim}</code></td>
+                        <td>GET</td>
+                        <td>Form edit mahasiswa</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge orange">🔄 Update</span></td>
+                        <td><code>/mhs/update/{nim}</code></td>
+                        <td>POST</td>
+                        <td>Proses update data</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">🗑️ Hapus</span></td>
+                        <td><code>/mhs/confirm_delete/{nim}</code></td>
+                        <td>GET</td>
+                        <td>Konfirmasi hapus</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge red">🗑️ Delete</span></td>
+                        <td><code>/mhs/delete/{nim}</code></td>
+                        <td>GET</td>
+                        <td>Proses hapus data</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="info-box success">
+                <strong>🎉 Keuntungan Menggunakan Model:</strong>
+                <ul>
+                    <li>Kode lebih terstruktur dan rapi</li>
+                    <li>Mudah untuk debugging</li>
+                    <li>Dapat digunakan kembali di controller lain</li>
+                    <li>Memisahkan logika bisnis dari controller</li>
+                    <li>Memudahkan proses maintenance dan pengembangan</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <strong>📌 Poin Penting:</strong>
+                <ul>
+                    <li>NIM sebagai <strong>Primary Key</strong> - tidak boleh duplikat</li>
+                    <li>Selalu validasi NIM sebelum insert/update</li>
+                    <li>Gunakan <code>htmlspecialchars()</code> untuk mencegah XSS</li>
+                    <li>Gunakan flashdata untuk notifikasi</li>
+                    <li>Hapus menggunakan konfirmasi (tanpa JavaScript)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FOOTER                                                        -->
+        <!-- ============================================================ -->
+        <div class="footer">
+            <p>
+                Jobsheet 2 - CRUD Mahasiswa CodeIgniter 3<br>
+                <strong>Membangun Aplikasi CRUD dengan MVC</strong>
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: #aaa;">
+                &copy; <?= date('Y') ?> - Dibuat dengan ❤️ untuk pembelajaran
+            </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- DOWNLOAD BUTTON                                               -->
+        <!-- ============================================================ -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-download" onclick="window.print()">
+                📥 Download PDF
+            </button>
+            <p style="font-size: 13px; color: #888; margin-top: 8px;">
+                Klik tombol di atas untuk menyimpan sebagai PDF
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set tanggal otomatis
+        document.getElementById('date').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+
+</body>
+</html>
